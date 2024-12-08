@@ -20,13 +20,13 @@ const Supplier = () => {
         <div className=' border-2 w-auto p-5 mt-2 rounded-xl shadow-xl '>
         <form onSubmit={handleSubmit} >
             <div className=' flex flex-col'>
-            <div className=' flex sm:flex-row'>
+            <div className=' flex flex-col sm:flex-row'>
             <div className=' flex flex-col'>
                 <label htmlFor="name"className=' text-left'>Supplier Name</label>
                 <input type='text' autoComplete="off" name="sname" placeholder="Supplier Name" value={values.sname} onChange={handleChange}onBlur={handleBlur} className=' border-2 rounded-md h-10 pl-2 text-lg'/>
                 {errors.sname && touched.sname?<p className=' text-left text-red-600'>{errors.sname}</p>:null}
             </div>
-            <div className=' flex flex-col ml-2'>
+            <div className=' flex flex-col mt-2 sm:ml-2 sm:mt-0'>
                 <label htmlFor="phnumber"className=' text-left'>Phone Number</label>
                 <input type='text' autoComplete='off' name="phNumber" placeholder='Phone Number' value={values.phNumber} onChange={handleChange}onBlur={handleBlur} className='border-2 rounded-md w-52 h-10 pl-2 text-lg'/>
                 {errors.phNumber&&touched.phNumber?<p className=' text-left  text-red-600'>{errors.phNumber}</p>:null}

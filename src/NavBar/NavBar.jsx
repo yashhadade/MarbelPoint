@@ -7,7 +7,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { useDemoRouter } from '@toolpad/core/internal';
-import Product from '../Componentes/Product';
+import Product from '../Componentes/Product/Product';
 import SignUp from '../Auth/SignUp';
 import Supplier from '../Componentes/Supplier/Supplier';
 
