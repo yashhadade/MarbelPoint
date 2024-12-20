@@ -7,7 +7,7 @@ const SignIn = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Sign In details:', { email, password });
-    // Perform the sign-in logic here, e.g., API call
+    
   };
 
   return (

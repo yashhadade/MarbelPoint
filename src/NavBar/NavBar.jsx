@@ -96,6 +96,11 @@ function Navbar(props) {
       router={router}
       theme={demoTheme}
       window={demoWindow}
+      branding={{
+        logo: null,
+        title: 'Marbel point',
+        homeUrl: '/toolpad/core/introduction',
+      }}
     >
       <DashboardLayout>
         <DemoPageContent pathname={router.pathname} />

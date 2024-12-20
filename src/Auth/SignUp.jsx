@@ -13,7 +13,7 @@ const initialValues = {
 const SignUp = () => {
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues: initialValues,
-    validationSchema: SignUpForm,  // Use the validation schema defined below
+    validationSchema: SignUpForm, 
     onSubmit: (value) => {
       console.log('User signed up', value);
     },
