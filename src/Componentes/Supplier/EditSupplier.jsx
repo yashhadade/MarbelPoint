@@ -17,6 +17,8 @@ const EditSupplier = ({ id }) => {
     try {
       const res = await supplierServise.getSingleSellerInformation(supplierId);
       setSupplierInformation(res.supplier); // Update supplier info
+      console.log(res.supplier.phonenumber);
+      console.log(res.supplier.phoneNumber, typeof res.supplier.phoneNumber);
     } catch (error) {
       console.error('Failed to fetch seller information:', error);
     }
@@ -47,7 +49,7 @@ const EditSupplier = ({ id }) => {
     if (supplierInformation) {
       setValues({
         name: supplierInformation.name,
-        phoneNumber: supplierInformation.phoneNumber || '',
+        phoneNumber: String(supplierInformation.phoneNumber)  || '',
         address: supplierInformation.address || '',
       });
     }
