@@ -6,6 +6,9 @@ import { useSnackbar } from 'notistack';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Button } from '@mui/material'; // Add this import
+import PopUp from '../../Model/popup';
+import { Edit } from '@mui/icons-material';
+import EditSupplier from './EditSupplier';
 
 const initialValues = {
   name: "",
@@ -16,7 +19,8 @@ const initialValues = {
 const Supplier = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [suppluInformation, setSuppluInformation] = useState([]);
-
+  const [openEdit,setOpenEdit]=useState(false);
+  const [supplierId,setSupplierId]=useState();
   // Columns for the DataGrid
   const columns = [
     { field: 'name', headerName: 'Supplier Name', width: 180 },
@@ -77,11 +81,12 @@ const Supplier = () => {
   };
   const handleEditClick = (rowData) => {
     console.log('Action button clicked for:', rowData);
-    // Here you can handle your action (edit, delete, etc.)
-    // For example:
-    // You could show a modal for editing the supplier data or call an API to delete the supplier
+    setSupplierId(rowData);
+   
+    
+    setOpenEdit(!openEdit)
   };
-
+  // console.log(supplierId);
   // Fetch all supplier data
   const getAllTheSellerInformation = async () => {
     try {
@@ -128,6 +133,7 @@ const Supplier = () => {
   const getSupplierInformation = async (value) => {
     try {
       const res = await supplierServise.getSupplierInformation(value);
+      console.log(res);
       if (res && res.success) {
         enqueueSnackbar("Supplier Add Successful", {
           variant: "success",
@@ -256,6 +262,7 @@ const Supplier = () => {
           getRowId={(row) => row.supplier_id} // Ensure each row has a unique `id`
         />
       </Box>
+      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} children={<EditSupplier id={supplierId}/>}/>
     </>
   );
 };
