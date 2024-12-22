@@ -10,29 +10,56 @@ const initialValues = {
   address: '',
 };
 
-const EditSupplier = ({ id }) => {
+const EditSupplier = ({ id,allInformation }) => {
   const [supplierInformation, setSupplierInformation] = useState(null);
 
   const getSingleSellerInformation = async (supplierId) => {
     try {
       const res = await supplierServise.getSingleSellerInformation(supplierId);
+      console.log(res)
       setSupplierInformation(res.supplier); // Update supplier info
-      console.log(res.supplier.phonenumber);
-      console.log(res.supplier.phoneNumber, typeof res.supplier.phoneNumber);
+      // console.log(Number(res.supplier.phoneNumber));
     } catch (error) {
       console.error('Failed to fetch seller information:', error);
     }
   };
-
+  console.log(res.supplier);
   useEffect(() => {
     if (id) {
       getSingleSellerInformation(id); // Fetch supplier info when ID changes
     }
   }, [id]);
 
+  const getUpdateSupplierInformation = async (sellerId,value) => {
+    try {
+      const res = await supplierServise.getUpdateSupplierInformation(sellerId,value);
+      console.log(res);
+      if (res && res.success) {
+        enqueueSnackbar("Supplier Edited Successful", {
+          variant: "success",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          autoHideDuration: 1000,
+        });
+        // allInformation();
+      } else {
+        enqueueSnackbar(res.data, {
+          variant: "error",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          autoHideDuration: 800,
+        });
+      }
+    } catch (error) {
+      enqueueSnackbar("Error", {
+        variant: "error",
+        anchorOrigin: { horizontal: "right", vertical: "top" },
+        autoHideDuration: 800,
+      });
+    }
+  };
+
   // Initialize the form with the supplier data once it's fetched
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setValues } = useFormik({
-    initialValues, // Set initial values to defaults first
+    initialValues, 
     validationSchema: SupplierForm,
     onSubmit: async (value) => {
       const updateValue = {
@@ -40,22 +67,23 @@ const EditSupplier = ({ id }) => {
         phoneNumber: Number(value.phoneNumber),
         admin: 1,
       };
+      getUpdateSupplierInformation(id,updateValue)
       console.log(updateValue);
     },
   });
 
-  // Update form values once supplier info is available
+ 
   useEffect(() => {
     if (supplierInformation) {
       setValues({
         name: supplierInformation.name,
-        phoneNumber: String(supplierInformation.phoneNumber)  || '',
+        phoneNumber:supplierInformation.phoneNumber || '',
         address: supplierInformation.address || '',
       });
     }
-  }, [supplierInformation, setValues]); // Trigger when supplier info is updated
+  }, [supplierInformation, setValues]); 
 
-  // Conditionally render the form once supplier data is available
+ 
   if (!supplierInformation) {
     return <div>Loading...</div>;
   }

@@ -16,30 +16,35 @@ export const SupplierForm=Yup.object({
                 .max(255)
                 .required("Please enter address")
 })
-export const  ProductForm=Yup.object({
-    sname: Yup.string()
-    .required('Supplier Name is required')
-    .oneOf(['Supplier A', 'Supplier B', 'Supplier C'], 'Invalid Supplier'), // Validating the dropdown selection
-  
-  product: Yup.string()
+export const ProductForm = () => {
+  return Yup.object({
+    // sname: Yup.string()
+    //   .required('Supplier Name is required')
+    //   .oneOf(
+    //     suppluInformation.map((supplier) => supplier.supplier_id), // Validate if the supplier name exists in the array
+    //     'Invalid Supplier'
+    //   ),
+    supplier_id: Yup.string()
     .required('Product Name is required'),
-  
-  size: Yup.string()
-    .required('Size is required'),
+    name: Yup.string()
+      .required('Product Name is required'),
 
-  rate: Yup.number()
-    .required('Rate is required')
-    .typeError('Rate must be a number')
-    .positive('Rate must be a positive number'),
-  
-  photo: Yup.string()
-    .required('Photo is required')
-    .matches(/^data:image\/(jpeg|png|jpg);base64,/, 'Invalid image format'), // Checks if it's a base64 image string
+    size: Yup.string()
+      .required('Size is required'),
 
-  description: Yup.string()
-    .required('Description is required')
-    .min(10, 'Description must be at least 10 characters'),
-})
+    rate: Yup.number()
+      .required('Rate is required')
+      .typeError('Rate must be a number')
+      .positive('Rate must be a positive number'),
+
+      image: Yup.string()
+      .required('Photo is required'), // Only checks that it's not empty
+
+    description: Yup.string()
+      .required('Description is required')
+      .min(10, 'Description must be at least 10 characters'),
+  });
+};
 
 export const SignUpForm = Yup.object({
     email: Yup.string()
