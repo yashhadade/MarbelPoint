@@ -32,7 +32,7 @@ const Supplier = () => {
       width: 150,
       renderCell: (params) => (
         <div>
-          
+          {/* Add a button for each row to perform actions */}
           <Button
             variant="contained"
             sx={{
@@ -41,7 +41,7 @@ const Supplier = () => {
                 backgroundColor: "#ff1c1c"
               }
             }}
-            onClick={() => handleDeleteButton(params.row.supplier_id)}
+            onClick={() => handleActionClick(params.row.supplier_id)}
           >
             Delete
           </Button>
@@ -75,7 +75,7 @@ const Supplier = () => {
   ];
 
   // Action button click handler
-  const handleDeleteButton = (rowData) => {
+  const handleActionClick = (rowData) => {
     console.log('Action button clicked for:', rowData);
     getDeletedSupplierInformation(rowData);
   };
@@ -91,7 +91,11 @@ const Supplier = () => {
   const getAllTheSellerInformation = async () => {
     try {
       const res = await supplierServise.getAllTheSellerInformation();
-     
+      // const formattedData = res.data.map((item) => ({
+      //   ...item,
+      //   id: item.supplier_id, // Use supplier_id as the id field for DataGrid
+      // }));
+      // setSuppluInformation(formattedData);
       if (res && res.success) {
         // Ensure each row has a unique `id`
         const formattedData = res.data.map((item) => ({
@@ -100,7 +104,7 @@ const Supplier = () => {
         }));
         setSuppluInformation(formattedData); // Set the updated data
       } else {
-        // console.error('Error fetching seller information', res.message || "Unknown error");
+        console.error('Error fetching seller information', res.message || "Unknown error");
       }
     } catch (error) {
       console.error('Failed to fetch seller information:', error);
@@ -109,7 +113,7 @@ const Supplier = () => {
 
   useEffect(() => {
     getAllTheSellerInformation(); // Fetch data when the component mounts
-  });
+  }, []);
 
   // Handle form submission using Formik
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
@@ -258,7 +262,7 @@ const Supplier = () => {
           getRowId={(row) => row.supplier_id} // Ensure each row has a unique `id`
         />
       </Box>
-      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} children={<EditSupplier id={supplierId} allInformation={getAllTheSellerInformation()} />}/>
+      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} children={<EditSupplier id={supplierId} allSupplierInformation={getAllTheSellerInformation()}/>}/>
     </>
   );
 };

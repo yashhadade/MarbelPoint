@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SupplierForm } from '../../Schema/Validation';
 import { useFormik } from 'formik';
 import supplierServise from '../../../services/supplier';
+import { useSnackbar } from 'notistack';
 
 // Default form values
 const initialValues = {
@@ -10,37 +11,31 @@ const initialValues = {
   address: '',
 };
 
-const EditSupplier = ({ id,allInformation }) => {
+const EditSupplier = ({ id,allSupplierInformation }) => {
+    const { enqueueSnackbar } = useSnackbar();
   const [supplierInformation, setSupplierInformation] = useState(null);
 
   const getSingleSellerInformation = async (supplierId) => {
     try {
       const res = await supplierServise.getSingleSellerInformation(supplierId);
-      console.log(res)
-      setSupplierInformation(res.supplier); // Update supplier info
-      // console.log(Number(res.supplier.phoneNumber));
+      setSupplierInformation(res.data); 
+      console.log(res);
+      console.log(res.supplier.phoneNumber, typeof res.supplier.phoneNumber);
     } catch (error) {
       console.error('Failed to fetch seller information:', error);
     }
   };
-  console.log(res.supplier);
-  useEffect(() => {
-    if (id) {
-      getSingleSellerInformation(id); // Fetch supplier info when ID changes
-    }
-  }, [id]);
-
-  const getUpdateSupplierInformation = async (sellerId,value) => {
+  const getUpdateSupplierInformation = async (supplierId,value) => {
     try {
-      const res = await supplierServise.getUpdateSupplierInformation(sellerId,value);
+      const res = await supplierServise.getUpdateSupplierInformation(supplierId,value);
       console.log(res);
       if (res && res.success) {
-        enqueueSnackbar("Supplier Edited Successful", {
+        enqueueSnackbar("Supplier Add Successful", {
           variant: "success",
           anchorOrigin: { horizontal: "right", vertical: "top" },
           autoHideDuration: 1000,
         });
-        // allInformation();
+        allSupplierInformation(); // Refresh the supplier list after adding
       } else {
         enqueueSnackbar(res.data, {
           variant: "error",
@@ -56,18 +51,23 @@ const EditSupplier = ({ id,allInformation }) => {
       });
     }
   };
+  useEffect(() => {
+    if (id) {
+      getSingleSellerInformation(id);
+    }
+  }, [id]);
 
-  // Initialize the form with the supplier data once it's fetched
+  
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setValues } = useFormik({
-    initialValues, 
+    initialValues,
     validationSchema: SupplierForm,
     onSubmit: async (value) => {
       const updateValue = {
         ...value,
         phoneNumber: Number(value.phoneNumber),
-        admin: 1,
+        admin_id: 1,
       };
-      getUpdateSupplierInformation(id,updateValue)
+      getUpdateSupplierInformation(id,updateValue);
       console.log(updateValue);
     },
   });
@@ -77,13 +77,13 @@ const EditSupplier = ({ id,allInformation }) => {
     if (supplierInformation) {
       setValues({
         name: supplierInformation.name,
-        phoneNumber:supplierInformation.phoneNumber || '',
+        phoneNumber: Number(supplierInformation.phoneNumber)  || '',
         address: supplierInformation.address || '',
       });
     }
-  }, [supplierInformation, setValues]); 
+  }, [supplierInformation, setValues]); // Trigger when supplier info is updated
 
- 
+  // Conditionally render the form once supplier data is available
   if (!supplierInformation) {
     return <div>Loading...</div>;
   }
