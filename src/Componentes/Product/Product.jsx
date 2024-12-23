@@ -194,7 +194,6 @@ const Product = () => {
       //   ...item,
       //   id: item.product_id, // Use supplier_id as the id field for DataGrid
       // }));(
-      console.log(res.data);
       setProductInformation(res.data);
       if (res && res.success) {
         setProductInformation(res.data); // Set the updated data
@@ -243,7 +242,6 @@ const Product = () => {
       });
     }
   };
-  console.log(productInformation)
   
 
   return (
