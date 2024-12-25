@@ -15,9 +15,9 @@ const EditSupplier = ({ id,allSupplierInformation }) => {
     const { enqueueSnackbar } = useSnackbar();
   const [supplierInformation, setSupplierInformation] = useState(null);
 
-  const getSingleSellerInformation = async (supplierId) => {
+  const getSingleSupplierInformation = async (supplierId) => {
     try {
-      const res = await supplierServise.getSingleSellerInformation(supplierId);
+      const res = await supplierServise.getSingleSupplierInformation(supplierId);
       setSupplierInformation(res.data); 
       console.log(res);
       console.log(res.supplier.phoneNumber, typeof res.supplier.phoneNumber);
@@ -53,7 +53,7 @@ const EditSupplier = ({ id,allSupplierInformation }) => {
   };
   useEffect(() => {
     if (id) {
-      getSingleSellerInformation(id);
+      getSingleSupplierInformation(id);
     }
   }, [id]);
 

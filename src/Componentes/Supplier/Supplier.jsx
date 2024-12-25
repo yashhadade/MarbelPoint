@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { SupplierForm } from '../../Schema/Validation';
 import supplierServise from '../../../services/supplier';
-import { useSnackbar } from 'notistack';
+import { useSnackbar, SnackbarProvider } from 'notistack';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Button } from '@mui/material'; // Add this import
@@ -19,8 +19,9 @@ const initialValues = {
 const Supplier = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [suppluInformation, setSuppluInformation] = useState([]);
-  const [openEdit,setOpenEdit]=useState(false);
-  const [supplierId,setSupplierId]=useState();
+  const [openEdit, setOpenEdit] = useState(false);
+  const [supplierId, setSupplierId] = useState();
+  
   // Columns for the DataGrid
   const columns = [
     { field: 'name', headerName: 'Supplier Name', width: 180 },
@@ -45,7 +46,6 @@ const Supplier = () => {
           >
             Delete
           </Button>
-
         </div>
       ),
     },
@@ -68,7 +68,6 @@ const Supplier = () => {
           >
             Edit
           </Button>
-
         </div>
       ),
     },
@@ -79,30 +78,23 @@ const Supplier = () => {
     console.log('Action button clicked for:', rowData);
     getDeletedSupplierInformation(rowData);
   };
+
   const handleEditClick = (rowData) => {
     console.log('Action button clicked for:', rowData);
     setSupplierId(rowData);
-   
-    
-    setOpenEdit(!openEdit)
+    setOpenEdit(!openEdit);
   };
-  // console.log(supplierId);
+
   // Fetch all supplier data
   const getAllTheSellerInformation = async () => {
     try {
       const res = await supplierServise.getAllTheSellerInformation();
-      // const formattedData = res.data.map((item) => ({
-      //   ...item,
-      //   id: item.supplier_id, // Use supplier_id as the id field for DataGrid
-      // }));
-      // setSuppluInformation(formattedData);
       if (res && res.success) {
-        // Ensure each row has a unique `id`
         const formattedData = res.data.map((item) => ({
           ...item,
-          id: item.supplier_id, // Use supplier_id as the id field for DataGrid
+          id: item.supplier_id, 
         }));
-        setSuppluInformation(formattedData); // Set the updated data
+        setSuppluInformation(formattedData); 
       } else {
         console.error('Error fetching seller information', res.message || "Unknown error");
       }
@@ -112,7 +104,7 @@ const Supplier = () => {
   };
 
   useEffect(() => {
-    getAllTheSellerInformation(); // Fetch data when the component mounts
+    getAllTheSellerInformation(); 
   }, []);
 
   // Handle form submission using Formik
@@ -123,7 +115,6 @@ const Supplier = () => {
       const updateValue = {
         ...value,
         phoneNumber: Number(value.phoneNumber), // Ensure the phone number is a number
-        admin: 1, // Set default admin value
       };
       await getSupplierInformation(updateValue);
     },
@@ -133,7 +124,6 @@ const Supplier = () => {
   const getSupplierInformation = async (value) => {
     try {
       const res = await supplierServise.getSupplierInformation(value);
-      console.log(res);
       if (res && res.success) {
         enqueueSnackbar("Supplier Add Successful", {
           variant: "success",
@@ -156,19 +146,18 @@ const Supplier = () => {
       });
     }
   };
-  const getDeletedSupplierInformation= async (id)=>{
+
+  const getDeletedSupplierInformation = async (id) => {
     try {
-      const res= await  supplierServise.getDeletedSupplierInformation(id);
-      console.log(res);
-      
-      if(res){
+      const res = await supplierServise.getDeletedSupplierInformation(id);
+      if (res) {
         enqueueSnackbar("Supplier Deleted Successful", {
           variant: "success",
           anchorOrigin: { horizontal: "right", vertical: "top" },
           autoHideDuration: 1000,
         });
         getAllTheSellerInformation();
-      }else{
+      } else {
         enqueueSnackbar(res.data, {
           variant: "error",
           anchorOrigin: { horizontal: "right", vertical: "top" },
@@ -182,17 +171,15 @@ const Supplier = () => {
         autoHideDuration: 800,
       });
     }
-  }
+  };
 
   return (
-    <>
+    <SnackbarProvider maxSnack={3}>
       <div>
         <div className='text-3xl font-bold'>SUPPLIER</div>
 
         {/* Form to add or update supplier */}
-        <div className=' w-auto p-5 mt-2 rounded-xl shadow-2xl' style={{
-          boxShadow:"0px 0px 8px #cccccc"
-        }}>
+        <div className='w-auto p-5 mt-2 rounded-xl shadow-2xl' style={{ boxShadow: "0px 0px 8px #cccccc" }}>
           <form onSubmit={handleSubmit}>
             <div className='flex flex-col'>
               <div className='flex flex-col sm:flex-row'>
@@ -250,9 +237,9 @@ const Supplier = () => {
       </div>
 
       {/* MUI DataGrid for displaying supplier information */}
-      <Box sx={{ width: '80%',  marginTop:"30px", borderRadius:"20px"}}>
+      <Box sx={{ width: '80%', marginTop: "30px", borderRadius: "20px" }}>
         <DataGrid
-          sx={{borderRadius:"20px",boxShadow:"0px 0px 8px #cccccc",padding:"10px"}}
+          sx={{ borderRadius: "20px", boxShadow: "0px 0px 8px #cccccc", padding: "10px" }}
           rows={suppluInformation}
           columns={columns}
           pageSize={5}
@@ -262,8 +249,8 @@ const Supplier = () => {
           getRowId={(row) => row.supplier_id} // Ensure each row has a unique `id`
         />
       </Box>
-      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} children={<EditSupplier id={supplierId} allSupplierInformation={getAllTheSellerInformation()}/>}/>
-    </>
+      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={() => setOpenEdit(!openEdit)} children={<EditSupplier id={supplierId} allSupplierInformation={getAllTheSellerInformation()} />} />
+    </SnackbarProvider>
   );
 };
 

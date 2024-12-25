@@ -10,7 +10,8 @@ import { useDemoRouter } from '@toolpad/core/internal';
 import Product from '../Componentes/Product/Product';
 import SignUp from '../Auth/SignUp';
 import Supplier from '../Componentes/Supplier/Supplier';
-
+import Logo from "../assets/MPlogo.png"
+import AllOrder from '../Componentes/Order/AllOrder';
 // Define theme for the demo
 const demoTheme = createTheme({
   cssVariables: {
@@ -39,6 +40,9 @@ function DemoPageContent({ pathname }) {
       break;
     case '/product':
       content = <Product/>;
+      break;
+    case '/allorder':
+      content = <AllOrder/>;
       break;
     case '/signUp':
       content=<SignUp/>;
@@ -88,6 +92,11 @@ function Navbar(props) {
           icon: <DescriptionIcon />,
         },
         {
+          segment: 'allorder',
+          title: 'All order',
+          icon: <DescriptionIcon />,
+        },
+        {
           segment: 'signUp',
           title: 'Sign Up',
           icon: <DescriptionIcon />,
@@ -97,7 +106,7 @@ function Navbar(props) {
       theme={demoTheme}
       window={demoWindow}
       branding={{
-        logo: null,
+        logo: <img src={Logo} alt="Marbel Point Logo" style={{ width: '40px', height: 'auto' }} />,
         title: 'Marbel point',
         homeUrl: '/toolpad/core/introduction',
       }}

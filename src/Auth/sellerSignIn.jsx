@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
 import adminServiceInformation from '../../services/admin';
 import { useSnackbar } from 'notistack'; // Assuming you're using this for notifications
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import sellerServise from '../../services/seller';
 
-const SignIn = () => {
+const SellerSignIn = () => {
+    const {id}=useParams();
   const [inputValue, setInputValue] = useState({ email: "", password: "" }); // Keep email and password in one state object
   const { enqueueSnackbar } = useSnackbar(); // Notification hook
   const navigate = useNavigate();
 
   
-  const getAdminInformation = async (email, password) => {
+  const getSellerSignIn = async (email, password) => {
     try {
      
-      const res = await adminServiceInformation.getAdminInformation({ email, password });
+      const res = await sellerServise.getSellerSignIn({ email, password });
       
       if (res && res.success) {
         // Log the response for debugging
         console.log(res);
 
         const token = res.token;
-        localStorage.setItem('token', token); // Save token to localStorage
+        localStorage.setItem('token', token);
 
-        // Ensure navigation happens after a successful response
-        navigate("/Dashbord"); // Redirect to Dashboard after successful login
-
+       
+        navigate(`/placeOrder/${id}`);
         enqueueSnackbar('Sign-In Successful', {
           variant: 'success',
           anchorOrigin: { horizontal: 'right', vertical: 'top' },
@@ -51,7 +52,7 @@ const SignIn = () => {
     console.log('Sign In details:', { email: inputValue.email, password: inputValue.password });
 
     // Call the sign-in function with the values from the state
-    getAdminInformation(inputValue.email, inputValue.password);
+    getSellerSignIn(inputValue.email, inputValue.password);
   };
 
   const handleInputChange = (e) => {
@@ -106,4 +107,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SellerSignIn;

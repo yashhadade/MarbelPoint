@@ -47,20 +47,33 @@ export const ProductForm = () => {
 };
 
 export const SignUpForm = Yup.object({
-    email: Yup.string()
-      .email('Invalid email format')
-      .required('Email is required'),
-  
-    userName: Yup.string()
-      .min(3, 'User Name must be at least 3 characters')
-      .max(15, 'User Name must be less than 15 characters')
-      .required('User Name is required'),
-  
-    password: Yup.string()
-      .min(8, 'Password must be at least 8 characters')
-      .required('Password is required'),
-  
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm Password is required'),
-  });
+  email: Yup.string()
+    .email('Invalid email format')
+    .required('Email is required'),
+
+  name: Yup.string()
+    .min(4, 'User Name must be at least 4 characters')
+    .max(15, 'User Name must be less than 15 characters')
+    .required('User Name is required'),
+
+  password: Yup.string()
+    .min(8, 'Password must be at least 8 characters')
+    .required('Password is required'),
+
+  address: Yup.string()
+    .min(10, 'Address must be at least 10 characters')
+    .max(255, 'Address cannot exceed 255 characters')
+    .required('Please enter an address'),
+
+  phoneNumber: Yup.string()
+    .matches(/^[0-9]+$/, 'Phone number must contain only numbers')
+    .length(10, 'Phone number must be exactly 10 digits')
+    .required('Please enter a phone number'),
+});
+
+export const OrderForm=Yup.object({
+  qyt:Yup.number()
+  .required('Rate is required')
+  .typeError('Rate must be a number')
+  .positive('Rate must be a positive number'),
+})

@@ -11,7 +11,7 @@ const getSupplierInformation=(data)=>{
     })
 }
 
-const getAllTheSellerInformation=()=>{
+const getAllTheSupplierInformation=()=>{
     return server.get("/supplier/getAllSupplier")
     .then(res=>{
         return res.data
@@ -21,7 +21,7 @@ const getAllTheSellerInformation=()=>{
     })
 }
 
-const getSingleSellerInformation=(id)=>{
+const getSingleSupplierInformation=(id)=>{
     return server.get(`/supplier/getSupplier/${id}`)
     .then(res=>{
         return res.data
@@ -51,8 +51,8 @@ const getDeletedSupplierInformation=(id)=>{
 
 const supplierServise={
     getSupplierInformation,
-    getAllTheSellerInformation,
-    getSingleSellerInformation,
+    getAllTheSupplierInformation,
+    getSingleSupplierInformation,
     getUpdateSupplierInformation,
     getDeletedSupplierInformation
 }

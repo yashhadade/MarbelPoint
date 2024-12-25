@@ -30,6 +30,7 @@ const Product = () => {
   const [openEdit,setOpenEdit]=useState(false)
   const [productId,setProductId]=useState();
   const columns = [
+    {field: 'id', headerName: 'Product ID', width: 180},
     { field: 'supplier_id', headerName: 'Supplier Name', width: 180 },
     { field: 'name', headerName: 'Product Name', width: 180 },
     { field: 'size', headerName: 'Size', width: 250 },
@@ -194,8 +195,9 @@ const Product = () => {
       //   ...item,
       //   id: item.product_id, // Use supplier_id as the id field for DataGrid
       // }));(
-      setProductInformation(res.data);
+      // setProductInformation(res.data);
       if (res && res.success) {
+        console.log(res.data)
         setProductInformation(res.data); // Set the updated data
       } else {
         console.error('Error fetching seller information', res.message || "Unknown error");
@@ -207,9 +209,9 @@ const Product = () => {
 
 
 
-  const getAllTheSellerInformation = async () => {
+  const getAllThesupplierInformation = async () => {
     try {
-      const res = await supplierServise.getAllTheSellerInformation();
+      const res = await supplierServise.getAllTheSupplierInformation();
       
       setSuppluInformation(res.data);
       if (res && res.success) {
@@ -224,7 +226,7 @@ const Product = () => {
 
   
   useEffect(() => {
-    getAllTheSellerInformation();
+    getAllThesupplierInformation();
     getAllTheProductInformation();
   }, []);
 
