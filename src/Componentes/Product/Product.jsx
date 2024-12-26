@@ -384,7 +384,9 @@ const Product = () => {
           getRowId={(row) => row.product_id} 
         />
       </Box>
-      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} children={<EditProduct id={productId} allInformation={getAllTheProductInformation()} />}/>
+      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} >
+      <EditProduct id={productId} allInformation={getAllTheProductInformation} />
+        </PopUp>
       {/* <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} children={<div>hii</div>}/> */}
     </>
 

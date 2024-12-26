@@ -86,9 +86,9 @@ const Supplier = () => {
   };
 
   // Fetch all supplier data
-  const getAllTheSellerInformation = async () => {
+  const getAllTheSupplierInformation = async () => {
     try {
-      const res = await supplierServise.getAllTheSellerInformation();
+      const res = await supplierServise.getAllTheSupplierInformation();
       if (res && res.success) {
         const formattedData = res.data.map((item) => ({
           ...item,
@@ -104,7 +104,7 @@ const Supplier = () => {
   };
 
   useEffect(() => {
-    getAllTheSellerInformation(); 
+    getAllTheSupplierInformation(); 
   }, []);
 
   // Handle form submission using Formik
@@ -130,7 +130,7 @@ const Supplier = () => {
           anchorOrigin: { horizontal: "right", vertical: "top" },
           autoHideDuration: 1000,
         });
-        getAllTheSellerInformation(); // Refresh the supplier list after adding
+        getAllTheSupplierInformation(); // Refresh the supplier list after adding
       } else {
         enqueueSnackbar(res.data, {
           variant: "error",
@@ -249,7 +249,9 @@ const Supplier = () => {
           getRowId={(row) => row.supplier_id} // Ensure each row has a unique `id`
         />
       </Box>
-      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={() => setOpenEdit(!openEdit)} children={<EditSupplier id={supplierId} allSupplierInformation={getAllTheSellerInformation()} />} />
+      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={() => setOpenEdit(!openEdit)}  >
+      <EditSupplier id={supplierId} allSupplierInformation={getAllTheSupplierInformation} />
+      </PopUp>
     </SnackbarProvider>
   );
 };
