@@ -77,7 +77,7 @@ const EditSupplier = ({ id,allSupplierInformation }) => {
     if (supplierInformation) {
       setValues({
         name: supplierInformation.name,
-        phoneNumber: Number(supplierInformation.phoneNumber)  || '',
+        phoneNumber: supplierInformation.phoneNumber || '',
         address: supplierInformation.address || '',
       });
     }
