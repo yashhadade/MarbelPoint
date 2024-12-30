@@ -89,7 +89,7 @@ const AllOrder = () => {
     return (
         <>
             <div className="text-3xl font-bold">ALL ORDER</div>
-            <Box sx={{ width: '80%', marginTop: "30px", borderRadius: "20px" }}>
+            <Box sx={{ width: '90%', marginTop: "30px", borderRadius: "20px" }}>
                 <DataGrid
                     sx={{
                         borderRadius: "20px",

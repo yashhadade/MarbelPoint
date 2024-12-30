@@ -122,7 +122,7 @@ const Product = () => {
       console.log(res);
       
       if(res){
-        enqueueSnackbar("Supplier Deleted Successful", {
+        enqueueSnackbar("Product Deleted Successful", {
           variant: "success",
           anchorOrigin: { horizontal: "right", vertical: "top" },
           autoHideDuration: 1000,
@@ -148,7 +148,7 @@ const Product = () => {
       const res = await productsServise.getProductInformation(value);
       console.log(res);
       if (res && res.success) {
-        enqueueSnackbar("Supplier Add Successful", {
+        enqueueSnackbar("Product Add Successful", {
           variant: "success",
           anchorOrigin: { horizontal: "right", vertical: "top" },
           autoHideDuration: 1000,
