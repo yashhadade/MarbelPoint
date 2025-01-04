@@ -1,45 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { useFormik } from 'formik';
-import { ProductForm } from '../../Schema/Validation';
-import supplierServise from '../../../services/supplier';
-import productsServise from '../../../services/product';
-import { Box } from '@mui/material';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
-import { useSnackbar } from 'notistack';
-import PopUp from '../../Model/popup';
-import EditProduct from './EditProduct';
-
+import React, { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import { ProductForm } from "../../Schema/Validation";
+import supplierServise from "../../../services/supplier";
+import productsServise from "../../../services/product";
+import { Box } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
+import { useSnackbar } from "notistack";
+import PopUp from "../../Model/popup";
+import EditProduct from "./EditProduct";
 
 const initialValues = {
-  supplier_id: '',
-  name: '',
-  size: '',
-  rate: '',
-  image: '',
-  description: '',
+  supplier_id: "",
+  name: "",
+  size: "",
+  rate: "",
+  image: "",
+  description: "",
 };
 
 const Product = () => {
-    const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const [imagePreview, setImagePreview] = useState('');
-  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageFile, setImageFile] = useState();
   const [suppluInformation, setSuppluInformation] = useState([]);
   const [productInformation, setProductInformation] = useState();
-  const [openEdit,setOpenEdit]=useState(false)
-  const [productId,setProductId]=useState();
+  const [openEdit, setOpenEdit] = useState(false);
+  const [productId, setProductId] = useState();
   const columns = [
-    {field: 'id', headerName: 'Product ID', width: 180},
-    { field: 'supplier_id', headerName: 'Supplier Name', width: 180 },
-    { field: 'name', headerName: 'Product Name', width: 180 },
-    { field: 'size', headerName: 'Size', width: 250 },
-    { field: 'rate', headerName: 'Rate', width: 250 },
-    { field: 'photo', headerName: 'Photo', width: 250 },
-    { field: 'description', headerName: 'Description', width: 250 },
+    { field: "id", headerName: "Product ID", width: 180 },
+    { field: "supplier_id", headerName: "Supplier Name", width: 180 },
+    { field: "name", headerName: "Product Name", width: 180 },
+    { field: "size", headerName: "Size", width: 250 },
+    { field: "rate", headerName: "Rate", width: 250 },
+    { field: "photo", headerName: "Photo", width: 250 },
+    { field: "description", headerName: "Description", width: 250 },
     {
-      field: 'qr_code',
-      headerName: 'Qr Code',
+      field: "qr_code",
+      headerName: "Qr Code",
       width: 250,
       renderCell: (params) => (
         <div>
@@ -47,7 +46,7 @@ const Product = () => {
           <a
             href={params.row.qr_code}
             download
-            style={{ textDecoration: 'none' }}  // Make sure the link doesn't have underline
+            style={{ textDecoration: "none" }} // Make sure the link doesn't have underline
           >
             <Button
               variant="contained"
@@ -65,8 +64,8 @@ const Product = () => {
       ),
     },
     {
-      field: 'delete',
-      headerName: 'Delete',
+      field: "delete",
+      headerName: "Delete",
       width: 150,
       renderCell: (params) => (
         <div>
@@ -86,8 +85,8 @@ const Product = () => {
       ),
     },
     {
-      field: 'Edit',
-      headerName: 'Edit',
+      field: "Edit",
+      headerName: "Edit",
       width: 150,
       renderCell: (params) => (
         <div>
@@ -107,54 +106,27 @@ const Product = () => {
       ),
     },
   ];
-  const handleDeleteButton=(id)=>{
-      console.log('Action button clicked for:', id);
-       getDeletedProductInformation(id);
-  }
-  const handleEditClick=(id)=>{
-    console.log()
+  const handleDeleteButton = (id) => {
+    console.log("Action button clicked for:", id);
+    getDeletedProductInformation(id);
+  };
+  const handleEditClick = (id) => {
+    console.log();
     setOpenEdit(!openEdit);
     setProductId(id);
-  }
-  const getDeletedProductInformation= async (id)=>{
+  };
+  const getDeletedProductInformation = async (id) => {
     try {
-      const res= await  productsServise.getDeletedProductInformation(id);
+      const res = await productsServise.getDeletedProductInformation(id);
       console.log(res);
-      
-      if(res){
+
+      if (res) {
         enqueueSnackbar("Product Deleted Successful", {
           variant: "success",
           anchorOrigin: { horizontal: "right", vertical: "top" },
           autoHideDuration: 1000,
         });
         getAllTheProductInformation();
-      }else{
-        enqueueSnackbar(res.data, {
-          variant: "error",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
-          autoHideDuration: 800,
-        });
-      }
-    } catch (error) {
-      enqueueSnackbar("Error", {
-        variant: "error",
-        anchorOrigin: { horizontal: "right", vertical: "top" },
-        autoHideDuration: 800,
-      });
-    }
-  }
-  const getProductInformation = async (value) => {
-    try {
-      const res = await productsServise.getProductInformation(value);
-      console.log(res);
-      if (res && res.success) {
-        enqueueSnackbar("Product Add Successful", {
-          variant: "success",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
-          autoHideDuration: 1000,
-        });
-        getAllTheProductInformation();
-        console.log("created Product "+productInformation)
       } else {
         enqueueSnackbar(res.data, {
           variant: "error",
@@ -170,24 +142,64 @@ const Product = () => {
       });
     }
   };
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
-    initialValues: initialValues,
-    validationSchema: ProductForm,
-    onSubmit: async (value) => {
-      const updateValue = {
-        ...value,
-        supplier_id: Number(value.supplier_id),
-        rate: Number(value.rate),
-        size: Number(value.size),
-      };
+  const getProductInformation = async (value) => {
+    // Create FormData and append all key-value pairs
+    const formData = new FormData();
 
-      console.log(updateValue);
-      getProductInformation(updateValue);
-      
-    },
+    // Append other fields
+    formData.append("name", value.name);
+    formData.append("description", value.description);
+    formData.append("rate", value.rate);
+    formData.append("size", value.size);
+    formData.append("supplier_id", value.supplier_id);
 
+    // Append the file
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+    const data = { ...value, image: imageFile };
+    try {
+      const res = await productsServise.getProductInformation(data);
 
-  });
+      if (res && res.success) {
+        enqueueSnackbar("Product Add Successful", {
+          variant: "success",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          autoHideDuration: 1000,
+        });
+        getAllTheProductInformation();
+      } else {
+        enqueueSnackbar(res.data, {
+          variant: "error",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          autoHideDuration: 800,
+        });
+      }
+    } catch (error) {
+      enqueueSnackbar("Error", {
+        variant: "error",
+        anchorOrigin: { horizontal: "right", vertical: "top" },
+        autoHideDuration: 800,
+      });
+    }
+  };
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    useFormik({
+      initialValues: initialValues,
+      validationSchema: ProductForm,
+      onSubmit: async (value) => {
+        const updateValue = {
+          ...value,
+          supplier_id: Number(value.supplier_id),
+          rate: Number(value.rate),
+          size: Number(value.size),
+        };
+
+        console.log(updateValue);
+        getProductInformation(updateValue);
+      },
+    });
   const getAllTheProductInformation = async () => {
     try {
       const res = await productsServise.getAllTheProductInformation();
@@ -197,54 +209,63 @@ const Product = () => {
       // }));(
       // setProductInformation(res.data);
       if (res && res.success) {
-        console.log(res.data)
+        console.log(res.data);
         setProductInformation(res.data); // Set the updated data
       } else {
-        console.error('Error fetching seller information', res.message || "Unknown error");
+        console.error(
+          "Error fetching seller information",
+          res.message || "Unknown error"
+        );
       }
     } catch (error) {
-      console.error('Failed to fetch seller information:', error);
+      console.error("Failed to fetch seller information:", error);
     }
   };
-
-
 
   const getAllThesupplierInformation = async () => {
     try {
       const res = await supplierServise.getAllTheSupplierInformation();
-      
+
       setSuppluInformation(res.data);
       if (res && res.success) {
         setSuppluInformation(res.data);
       } else {
-        console.error('Error fetching seller information', res.message || 'Unknown error');
+        console.error(
+          "Error fetching seller information",
+          res.message || "Unknown error"
+        );
       }
     } catch (error) {
-      console.error('Failed to fetch seller information:', error);
+      console.error("Failed to fetch seller information:", error);
     }
   };
 
-  
   useEffect(() => {
     getAllThesupplierInformation();
     getAllTheProductInformation();
   }, []);
 
-
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImageFile(file);
+      const renderFile = new FileReader();
+
+      renderFile.onload = () => {
+        console.log(renderFile.readyState);
+        if (renderFile.readyState === 2) {
+          setImageFile(() => renderFile.result);
+        }
+      };
+      renderFile.readAsDataURL(file);
       setImagePreview(URL.createObjectURL(file));
       handleChange({
         target: {
-          name: 'image',
+          name: "image",
           value: file.name,
         },
       });
     }
   };
-  
 
   return (
     <>
@@ -276,7 +297,11 @@ const Product = () => {
                       <option disabled>No suppliers available</option>
                     )}
                   </select>
-                  {errors.supplier_id && touched.supplier_id && <p className="text-left text-red-600">{errors.supplier_id}</p>}
+                  {errors.supplier_id && touched.supplier_id && (
+                    <p className="text-left text-red-600">
+                      {errors.supplier_id}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col mt-2 sm:ml-2 sm:mt-0">
                   <label htmlFor="product" className="text-left">
@@ -291,7 +316,9 @@ const Product = () => {
                     onBlur={handleBlur}
                     className="border-2 rounded-md w-52 h-10 pl-2 text-lg"
                   />
-                  {errors.name && touched.name && <p className="text-left text-red-600">{errors.name}</p>}
+                  {errors.name && touched.name && (
+                    <p className="text-left text-red-600">{errors.name}</p>
+                  )}
                 </div>
                 <div className="flex flex-col mt-2 sm:ml-2 sm:mt-0">
                   <label htmlFor="size" className="text-left">
@@ -306,7 +333,9 @@ const Product = () => {
                     onBlur={handleBlur}
                     className="border-2 rounded-md w-52 h-10 pl-2 text-lg"
                   />
-                  {errors.size && touched.size && <p className="text-left text-red-600">{errors.size}</p>}
+                  {errors.size && touched.size && (
+                    <p className="text-left text-red-600">{errors.size}</p>
+                  )}
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row mt-2">
@@ -323,7 +352,9 @@ const Product = () => {
                     onBlur={handleBlur}
                     className="border-2 rounded-md w-52 h-10 pl-2 text-lg"
                   />
-                  {errors.rate && touched.rate && <p className="text-left text-red-600">{errors.rate}</p>}
+                  {errors.rate && touched.rate && (
+                    <p className="text-left text-red-600">{errors.rate}</p>
+                  )}
                 </div>
                 <div className="flex flex-col mt-2 sm:ml-2 sm:mt-0">
                   <label htmlFor="image" className="text-left">
@@ -336,7 +367,9 @@ const Product = () => {
                     onBlur={handleBlur}
                     className="border-2 rounded-md w-52 h-10 pl-2 text-lg"
                   />
-                  {errors.image && touched.image && <p className="text-left text-red-600">{errors.image}</p>}
+                  {errors.image && touched.image && (
+                    <p className="text-left text-red-600">{errors.image}</p>
+                  )}
                 </div>
                 <div className="flex flex-col mt-2 sm:ml-2 sm:mt-0">
                   <label htmlFor="description" className="text-left">
@@ -351,28 +384,37 @@ const Product = () => {
                     className="border-2 rounded-md w-52 h-10 pl-2 text-lg"
                   />
                   {errors.description && touched.description && (
-                    <p className="text-left text-red-600">{errors.description}</p>
+                    <p className="text-left text-red-600">
+                      {errors.description}
+                    </p>
                   )}
                 </div>
               </div>
               {imagePreview && (
                 <div className="mt-4">
-                  <img src={imagePreview} alt="Preview" className="w-24 h-24 object-cover" />
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-24 h-24 object-cover"
+                  />
                 </div>
               )}
 
-              <button className="border-2 mt-2 p-2 rounded-md shadow-sm hover:tracking-widest bg-sky-700 text-white" type="submit">
+              <button
+                className="border-2 mt-2 p-2 rounded-md shadow-sm hover:tracking-widest bg-sky-700 text-white"
+                type="submit"
+              >
                 Submit
               </button>
             </div>
           </form>
         </div>
       </div>
-      <Box sx={{ width: '80%', marginTop: "30px", borderRadius: "20px" }}>
+      <Box sx={{ width: "80%", marginTop: "30px", borderRadius: "20px" }}>
         <DataGrid
           sx={{
             borderRadius: "20px",
-            boxShadow: "0px 0px 8px #cccccc",
+            boxShadow: "0px 0px 2px #cccccc",
             padding: "10px",
           }}
           rows={productInformation}
@@ -381,15 +423,21 @@ const Product = () => {
           rowsPerPageOptions={[5, 10, 20]}
           disableSelectionOnClick
           components={{ Toolbar: GridToolbar }}
-          getRowId={(row) => row.product_id} 
+          getRowId={(row) => row.product_id}
         />
       </Box>
-      <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} >
-      <EditProduct id={productId} allInformation={getAllTheProductInformation} />
-        </PopUp>
+      <PopUp
+        open={openEdit}
+        title={"Edit Supplier"}
+        handleClose={() => setOpenEdit(!openEdit)}
+      >
+        <EditProduct
+          id={productId}
+          allInformation={getAllTheProductInformation}
+        />
+      </PopUp>
       {/* <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} children={<div>hii</div>}/> */}
     </>
-
   );
 };
 
