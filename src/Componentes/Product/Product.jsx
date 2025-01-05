@@ -193,7 +193,7 @@ const Product = () => {
           ...value,
           supplier_id: Number(value.supplier_id),
           rate: Number(value.rate),
-          size: Number(value.size),
+          size: value.size,
         };
 
         console.log(updateValue);
