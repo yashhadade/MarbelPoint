@@ -75,9 +75,10 @@ const EditSupplier = ({ id,allSupplierInformation }) => {
  
   useEffect(() => {
     if (supplierInformation) {
+      console.log(supplierInformation)
       setValues({
         name: supplierInformation.name,
-        phoneNumber: supplierInformation.phoneNumber || '',
+        phoneNumber: supplierInformation.phonenumber || '',
         address: supplierInformation.address || '',
       });
     }

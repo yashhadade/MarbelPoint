@@ -94,7 +94,7 @@ const EditProduct = ({ id, allInformation }) => {
 
   const getAllTheSellerInformation = async () => {
     try {
-      const res = await supplierServise.getAllTheSellerInformation();
+      const res = await supplierServise.getAllTheSupplierInformation();
       if (res && res.success) {
         setSuppluInformation(res.data);
       } else {
@@ -107,12 +107,13 @@ const EditProduct = ({ id, allInformation }) => {
 
   useEffect(() => {
     if (productInformation) {
+      console.log(productInformation)
       setValues({
         supplier_id: productInformation.supplier_id || '',
         name: productInformation.name || '',
         size: productInformation.size || '',
         rate: productInformation.rate || '',
-        image: productInformation.image || '',
+        image: productInformation.photo || '',
         description: productInformation.description || '',
       });
     }

@@ -30,11 +30,23 @@ const Product = () => {
   const [productId, setProductId] = useState();
   const columns = [
     { field: "id", headerName: "Product ID", width: 180 },
-    { field: "supplier_id", headerName: "Supplier Name", width: 180 },
+    { field: "supplier_name", headerName: "Supplier Name", width: 180 },
     { field: "name", headerName: "Product Name", width: 180 },
     { field: "size", headerName: "Size", width: 250 },
     { field: "rate", headerName: "Rate", width: 250 },
-    { field: "photo", headerName: "Photo", width: 250 },
+    {
+      field: "photo",
+      headerName: "Photo",
+      width: 250,
+       hight:500,
+      renderCell: (params) => (
+        <img
+          src={params.value} // Assuming `params.value` contains the image URL
+          alt="Product"
+          style={{ width: "100px", height: "100px", borderRadius: "5px" }} // You can adjust the style
+        />
+      ),
+    },
     { field: "description", headerName: "Description", width: 250 },
     {
       field: "qr_code",
@@ -144,19 +156,10 @@ const Product = () => {
   };
   const getProductInformation = async (value) => {
     // Create FormData and append all key-value pairs
-    const formData = new FormData();
+ 
 
-    // Append other fields
-    formData.append("name", value.name);
-    formData.append("description", value.description);
-    formData.append("rate", value.rate);
-    formData.append("size", value.size);
-    formData.append("supplier_id", value.supplier_id);
+console.log(imageFile);
 
-    // Append the file
-    if (imageFile) {
-      formData.append("image", imageFile);
-    }
     const data = { ...value, image: imageFile };
     try {
       const res = await productsServise.getProductInformation(data);

@@ -21,10 +21,10 @@ const PlaceOrder = () => {
           const res = await orderServise.getOrderInformation(value);
           console.log(res);
           if (res && res.success) {
-            enqueueSnackbar("Supplier Add Successful", {
+            enqueueSnackbar("Order Placed Sucessfully", {
               variant: "success",
               anchorOrigin: { horizontal: "right", vertical: "top" },
-              autoHideDuration: 1000,
+              autoHideDuration: 3000,
             });
             console.log("created Product "+productInformation)
           } else {

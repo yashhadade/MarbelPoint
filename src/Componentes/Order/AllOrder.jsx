@@ -29,7 +29,19 @@ const AllOrder = () => {
         { field: 'name', headerName: 'Product Name', width: 180 },
         { field: 'size', headerName: 'Size', width: 250 },
         { field: 'rate', headerName: 'Rate', width: 250 },
-        { field: 'photo', headerName: 'Photo', width: 250 },
+        {
+            field: "photo",
+            headerName: "Photo",
+            width: 250,
+             hight:500,
+            renderCell: (params) => (
+              <img
+                src={params.value} // Assuming `params.value` contains the image URL
+                alt="Product"
+                style={{ width: "100px", height: "50px", borderRadius: "5px" }} // You can adjust the style
+              />
+            ),
+          },
         { field: 'orderdate', headerName: 'Date', width: 250 },
 
         { field: 'qyt', headerName: 'Quantity', width: 250 },
