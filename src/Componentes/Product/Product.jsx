@@ -9,8 +9,8 @@ import { Button } from "@mui/material";
 import { useSnackbar } from "notistack";
 import PopUp from "../../Model/popup";
 import EditProduct from "./EditProduct";
-import QRCode from 'qrcode';
-import WhiteLogo from '../../assets/WhiteBackGoundLogo.png'
+import QRCode from "qrcode";
+import WhiteLogo from "../../assets/WhiteBackGoundLogo.png";
 const initialValues = {
   supplier_id: "",
   name: "",
@@ -40,7 +40,7 @@ const Product = () => {
       field: "photo",
       headerName: "Photo",
       width: 250,
-       hight:500,
+      hight: 500,
       renderCell: (params) => (
         <img
           src={params.value} // Assuming `params.value` contains the image URL
@@ -51,7 +51,7 @@ const Product = () => {
     },
     { field: "description", headerName: "Description", width: 250 },
     {
-     field: "qr_code",
+      field: "qr_code",
       headerName: "Qr Code",
       width: 250,
       renderCell: (params) => (
@@ -62,18 +62,24 @@ const Product = () => {
             download
             style={{ textDecoration: "none" }} // Make sure the link doesn't have underline
           > */}
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#4caf50", // Green color for the download button
-                ":hover": {
-                  backgroundColor: "#45a049",
-                },
-              }}
-              onClick={()=>handleDownloadQrCode(params.row.id,params.row.name,params.row.rate)}
-            >
-              Download QR
-            </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#4caf50", // Green color for the download button
+              ":hover": {
+                backgroundColor: "#45a049",
+              },
+            }}
+            onClick={() =>
+              handleDownloadQrCode(
+                params.row.id,
+                params.row.name,
+                params.row.rate
+              )
+            }
+          >
+            Download QR
+          </Button>
           {/* </a> */}
         </div>
       ),
@@ -125,53 +131,43 @@ const Product = () => {
   const handleDownloadQrCode = (id, name, rate) => {
     console.log("Generating QR code for ID:", id);
 
-    const fullUrl = `http://localhost:5173/oderSignIn/${id}`; 
+    const fullUrl = `http://localhost:5173/oderSignIn/${id}`;
 
-    
     QRCode.toCanvas(canvasRef.current, fullUrl, { width: 500 }, (error) => {
       if (error) {
         console.error("Error generating QR code:", error);
         return;
       }
 
-      
       const canvas = canvasRef.current;
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext("2d");
 
-     
       context.font = "bold 20px Arial";
-      context.fillStyle = "black";  
-      context.textAlign = "left"; 
+      context.fillStyle = "black";
+      context.textAlign = "left";
 
-      
-      context.fillText(`Product ID: ${id}`, 10, 20); 
+      context.fillText(`Product ID: ${id}`, 10, 20);
 
-      
-      context.fillText(`Product Name: ${name}`, 10, 40); 
+      context.fillText(`Product Name: ${name}`, 10, 40);
 
-     
       const qrCodeHeight = 455;
-      context.fillText(`Price: ₹${rate}`, 10, qrCodeHeight + 30); 
+      context.fillText(`Price: ₹${rate}`, 10, qrCodeHeight + 30);
 
-     
       const logo = new Image();
       logo.src = WhiteLogo;
 
       logo.onload = () => {
-        
-        const logoSize = 100; 
-        const logoX = (canvas.width - logoSize) / 2; 
-        const logoY = (qrCodeHeight - logoSize) / 2; 
+        const logoSize = 100;
+        const logoX = (canvas.width - logoSize) / 2;
+        const logoY = (qrCodeHeight - logoSize) / 2;
 
-        
         context.drawImage(logo, logoX, logoY, logoSize, logoSize);
 
-        
-        const dataUrl = canvas.toDataURL('image/png'); 
-        const link = document.createElement('a');
+        const dataUrl = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
         link.href = dataUrl;
         link.download = `qr_code_${id}.png`;
-        link.click(); 
+        link.click();
       };
     });
   };
@@ -213,11 +209,11 @@ const Product = () => {
   };
   const getProductInformation = async (value) => {
     // Create FormData and append all key-value pairs
- 
 
-console.log(imageFile);
+    const imageUrl = await uploadImage(imageFile);
+console.log(imageUrl);
 
-    const data = { ...value, image: imageFile };
+    const data = { ...value, image: imageUrl };
     try {
       const res = await productsServise.getProductInformation(data);
 
@@ -311,7 +307,6 @@ console.log(imageFile);
       const renderFile = new FileReader();
 
       renderFile.onload = () => {
-        console.log(renderFile.readyState);
         if (renderFile.readyState === 2) {
           setImageFile(() => renderFile.result);
         }
@@ -327,10 +322,28 @@ console.log(imageFile);
     }
   };
 
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      `${import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET}`
+    ); // Replace with your upload preset
+    formData.append("cloud_name", `${import.meta.env.VITE_CLOUD_NAME}`); // Replace with your Cloudinary cloud name
+
+    const response = await fetch(import.meta.env.VITE_CLOUDINARY_API_URL, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    return data.secure_url; // Cloudinary URL of the uploaded image
+  };
+
   return (
     <>
       <div>
-      <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+        <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
         <div className="text-3xl font-bold">PRODUCT</div>
         <div className="border-2 w-auto p-5 mt-2 rounded-xl shadow-xl">
           <form onSubmit={handleSubmit}>
