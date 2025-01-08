@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import { ProductForm } from "../../Schema/Validation";
 import supplierServise from "../../../services/supplier";
@@ -9,7 +9,8 @@ import { Button } from "@mui/material";
 import { useSnackbar } from "notistack";
 import PopUp from "../../Model/popup";
 import EditProduct from "./EditProduct";
-
+import QRCode from 'qrcode';
+import WhiteLogo from '../../assets/WhiteBackGoundLogo.png'
 const initialValues = {
   supplier_id: "",
   name: "",
@@ -21,6 +22,7 @@ const initialValues = {
 
 const Product = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const canvasRef = useRef(null);
 
   const [imagePreview, setImagePreview] = useState("");
   const [imageFile, setImageFile] = useState();
@@ -49,17 +51,17 @@ const Product = () => {
     },
     { field: "description", headerName: "Description", width: 250 },
     {
-      field: "qr_code",
+     field: "qr_code",
       headerName: "Qr Code",
       width: 250,
       renderCell: (params) => (
         <div>
           {/* Create a button that will download the QR code */}
-          <a
+          {/* <a
             href={params.row.qr_code}
             download
             style={{ textDecoration: "none" }} // Make sure the link doesn't have underline
-          >
+          > */}
             <Button
               variant="contained"
               sx={{
@@ -68,10 +70,11 @@ const Product = () => {
                   backgroundColor: "#45a049",
                 },
               }}
+              onClick={()=>handleDownloadQrCode(params.row.id,params.row.name,params.row.rate)}
             >
               Download QR
             </Button>
-          </a>
+          {/* </a> */}
         </div>
       ),
     },
@@ -118,6 +121,60 @@ const Product = () => {
       ),
     },
   ];
+
+  const handleDownloadQrCode = (id, name, rate) => {
+    console.log("Generating QR code for ID:", id);
+
+    const fullUrl = `http://localhost:5173/oderSignIn/${id}`; 
+
+    
+    QRCode.toCanvas(canvasRef.current, fullUrl, { width: 500 }, (error) => {
+      if (error) {
+        console.error("Error generating QR code:", error);
+        return;
+      }
+
+      
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+
+     
+      context.font = "bold 20px Arial";
+      context.fillStyle = "black";  
+      context.textAlign = "left"; 
+
+      
+      context.fillText(`Product ID: ${id}`, 10, 20); 
+
+      
+      context.fillText(`Product Name: ${name}`, 10, 40); 
+
+     
+      const qrCodeHeight = 455;
+      context.fillText(`Price: ₹${rate}`, 10, qrCodeHeight + 30); 
+
+     
+      const logo = new Image();
+      logo.src = WhiteLogo;
+
+      logo.onload = () => {
+        
+        const logoSize = 100; 
+        const logoX = (canvas.width - logoSize) / 2; 
+        const logoY = (qrCodeHeight - logoSize) / 2; 
+
+        
+        context.drawImage(logo, logoX, logoY, logoSize, logoSize);
+
+        
+        const dataUrl = canvas.toDataURL('image/png'); 
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `qr_code_${id}.png`;
+        link.click(); 
+      };
+    });
+  };
   const handleDeleteButton = (id) => {
     console.log("Action button clicked for:", id);
     getDeletedProductInformation(id);
@@ -273,6 +330,7 @@ console.log(imageFile);
   return (
     <>
       <div>
+      <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
         <div className="text-3xl font-bold">PRODUCT</div>
         <div className="border-2 w-auto p-5 mt-2 rounded-xl shadow-xl">
           <form onSubmit={handleSubmit}>

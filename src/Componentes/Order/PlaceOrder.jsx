@@ -87,7 +87,7 @@ const PlaceOrder = () => {
                     <div>
                         
                         <h2 className=' text-lg' style={{fontWeight:"500"}}>Product Code: {productInformation.id}</h2>
-                        <h2  className=' text-lg' style={{fontWeight:"500"}}>Supplier Name:{productInformation.supplier_id}</h2>
+                        <h2  className=' text-lg' style={{fontWeight:"500"}}>Supplier Name:{productInformation.supplier_name}</h2>
                         <h2 className=' text-lg' style={{fontWeight:"500"}}>Product Name: {productInformation.name}</h2>
                         <p>Photo:</p>
                         {/* Display product image if URL is available */}

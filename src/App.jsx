@@ -7,6 +7,7 @@ import SignIn from './Auth/SignIn'
 import SellerSignIn from './Auth/sellerSignIn'
 import PlaceOrder from './Componentes/Order/PlaceOrder'
 import { SnackbarProvider } from 'notistack';
+import SellerNavbar from './NavBar/SellerNavbar'
 
 function App() {
 
@@ -16,7 +17,9 @@ function App() {
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path='/Dashbord' element={<Navbar />} />
+          <Route path='/sellerDasBhord' element={<SellerNavbar/>}/>
           <Route path="/oderSignIn/:id" element={<SellerSignIn />} />
+          <Route path="/sellerSignIn" element={<SellerSignIn />} />
           <Route path="/placeOrder/:id" element={<PlaceOrder />} />
         </Routes>
       </SnackbarProvider>

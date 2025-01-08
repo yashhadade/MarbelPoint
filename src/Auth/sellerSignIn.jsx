@@ -23,8 +23,11 @@ const SellerSignIn = () => {
         const token = res.token;
         localStorage.setItem('token', token);
 
-       
+       if(id){
         navigate(`/placeOrder/${id}`);
+       }else{
+        navigate(`/sellerDasBhord`);
+       }
         enqueueSnackbar('Sign-In Successful', {
           variant: 'success',
           anchorOrigin: { horizontal: 'right', vertical: 'top' },

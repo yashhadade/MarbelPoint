@@ -19,6 +19,7 @@ const AllOrder = () => {
             console.error('Failed to fetch seller information:', error);
         }
     };
+    console.log(orderInfo)
     useEffect(() => {
         getAllTheOrderInformation();
 
@@ -114,7 +115,7 @@ const AllOrder = () => {
                     rowsPerPageOptions={[5, 10, 20]}
                     disableSelectionOnClick
                     components={{ Toolbar: GridToolbar }}
-                    getRowId={(row) => row.product_id}
+                    getRowId={(row) => row.order_id}
                 />
             </Box>
         
