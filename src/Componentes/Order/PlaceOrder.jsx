@@ -7,7 +7,8 @@ import orderServise from '../../../services/order';
 import { useSnackbar } from 'notistack';
 
 const initialValues = {
-    qyt: '', // Start with an empty string
+    qyt: '', 
+    description: '',
 };
 
 const PlaceOrder = () => {
@@ -67,12 +68,13 @@ const PlaceOrder = () => {
         onSubmit: async (value) => {
             const updateValue = {
                 ...value,
-                product_id: productInformation.product_id, // Add the product_id from fetched product info
-                qyt: Number(value.qyt), // Convert quantity to a number
+                product_id: productInformation.product_id, 
+                qyt: Number(value.qyt), 
             };
-            getOrderInformation(updateValue);
             console.log(updateValue);
-            // Here you can add functionality to send the order to the backend
+            getOrderInformation(updateValue);
+            
+           
         },
     });
 
@@ -114,6 +116,22 @@ const PlaceOrder = () => {
                                 />
                                 {/* Show validation error if quantity is invalid */}
                                 {errors.qyt && touched.qyt && <p className="text-left text-red-600">{errors.qyt}</p>}
+                            </div>
+                            <div className="flex flex-col mt-2 sm:ml-2 sm:mt-0">
+                                <label htmlFor="description" className="text-left">
+                                    Description
+                                </label>
+                                <input
+                                    type="text"
+                                    name="description"
+                                    placeholder="description"
+                                    value={values.description}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    className="border-2 rounded-md w-52 h-10 pl-2 text-lg"
+                                />
+                                {/* Show validation error if quantity is invalid */}
+                                {errors.description && touched.description && <p className="text-left text-red-600">{errors.description}</p>}
                             </div>
                             <button
                                 className="border-2 mt-2 p-2 rounded-md shadow-sm hover:tracking-widest bg-sky-700 text-white"

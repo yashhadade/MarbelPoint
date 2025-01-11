@@ -3,6 +3,8 @@ import adminServiceInformation from '../../services/admin';
 import { useSnackbar } from 'notistack'; // Assuming you're using this for notifications
 import { useNavigate, useParams } from 'react-router-dom';
 import sellerServise from '../../services/seller';
+import PopUp from '../Model/popup';
+import UpdateSellerPassword from './UpdateSellerPassword';
 
 const SellerSignIn = () => {
     const {id}=useParams();
@@ -106,6 +108,7 @@ const SellerSignIn = () => {
           </div>
         </form>
       </div>
+     
     </div>
   );
 };

@@ -2,12 +2,17 @@ import { Box, Button } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react'
 import orderServise from '../../../services/order';
+import PopUp from '../../Model/popup';
+import UpdatedOrder from './UpdatedOrder';
 
-const AllOrder = () => {
+const SellerOrder = () => {
     const [orderInfo, setOrderInfo] = useState();
+    const [openEdit,setOpenEdit]=useState(false);
+    const [orderId,setOrderId]=useState();
+    const [orderDetail,setOrderDetail]=useState();
     const getAllTheOrderInformation = async () => {
         try {
-            const res = await orderServise.getAllTheOrderInformation();
+            const res = await orderServise.getAllTheSellerOrderInformation();
 
             //   setSuppluInformation(res.data);
             if (res && res.success) {
@@ -47,63 +52,35 @@ const AllOrder = () => {
         { field: 'orderdate', headerName: 'Date', width: 250 },
 
         { field: 'qyt', headerName: 'Quantity', width: 250 },
-
         {
-            field: 'delete',
-            headerName: 'Delete',
+            field: 'Edit',
+            headerName: 'Edit',
             width: 150,
             renderCell: (params) => (
-               
                 <div>
                     <Button
                         variant="contained"
                         sx={{
-                            backgroundColor: "#ff4848",
+                            backgroundColor: "#6b6565",
                             ":hover": {
-                                backgroundColor: "#ff1c1c",
+                                backgroundColor: "#ac9c9c",
                             },
                         }}
-                        onClick={() => handleDeleteButton(params.row.order_id)}
+                        onClick={() => handleEditClick(params.row.order_id,params.row)}
                     >
-                        Delete
+                        Edit
                     </Button>
                 </div>
             ),
         },
-        
     ];
-    const handleDeleteButton = (id) => {
-        console.log('Action button clicked for:', id);
-        getDeletedOrderInformation(id);
+   
+    const handleEditClick = (id,info) => {
+        console.log()
+        setOpenEdit(!openEdit);
+        setOrderId(id);
+        setOrderDetail(info)
     }
-    const getDeletedOrderInformation = async (id) => {
-        try {
-          const res = await orderServise.getDeletedOrderInformation(id);
-          console.log(res);
-    
-          if (res) {
-            enqueueSnackbar("Order Deleted Successful", {
-              variant: "success",
-              anchorOrigin: { horizontal: "right", vertical: "top" },
-              autoHideDuration: 1000,
-            });
-            getAllTheOrderInformation();
-          } else {
-            enqueueSnackbar(res.data, {
-              variant: "error",
-              anchorOrigin: { horizontal: "right", vertical: "top" },
-              autoHideDuration: 800,
-            });
-          }
-        } catch (error) {
-          enqueueSnackbar("Error", {
-            variant: "error",
-            anchorOrigin: { horizontal: "right", vertical: "top" },
-            autoHideDuration: 800,
-          });
-        }
-      };
-    
     return (
         <>
             <div className="text-3xl font-bold">ALL ORDER</div>
@@ -123,9 +100,20 @@ const AllOrder = () => {
                     getRowId={(row) => row.order_id}
                 />
             </Box>
-        
+            <PopUp
+        open={openEdit}
+        title={"Edit Supplier"}
+        handleClose={() => setOpenEdit(!openEdit)}
+      >
+        <UpdatedOrder
+        id={orderId}
+        refreshTabel={()=>getAllTheOrderInformation()}
+        closeEdit={()=>setOpenEdit(!openEdit)}
+        info={orderDetail}
+        />
+      </PopUp>
         </>
     )
 }
 
-export default AllOrder
+export default SellerOrder

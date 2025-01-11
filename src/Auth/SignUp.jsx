@@ -7,6 +7,8 @@ import { useSnackbar } from 'notistack';
 import { Box } from '@mui/material';
 import { DataGrid,GridToolbar } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
+import PopUp from '../Model/popup';
+import UpdateSellerPassword from './UpdateSellerPassword';
 
 const initialValues = {
   email: '',
@@ -19,6 +21,9 @@ const initialValues = {
 const SignUp = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [sellerInformation,setSellerInformation]=useState()
+  const [sellerId,setSellerId]=useState();
+  const [openEdit,setOpenEdit]=useState(false);
+  const [sellerEamilName,setsellerEamilName]=useState()
   const columns = [
     {field: 'email', headerName: 'Email', width: 180},
     { field: 'name', headerName: 'Seller Name', width: 180 },
@@ -59,7 +64,7 @@ const SignUp = () => {
                 backgroundColor: "#ac9c9c",
               },
             }}
-            onClick={() => handleEditClick(params.row.seller_id)}
+            onClick={() => handleEditClick(params.row.seller_id,params.row)}
           >
             Edit
           </Button>
@@ -71,10 +76,11 @@ const SignUp = () => {
       console.log('Action button clicked for:', id);
         getDeletedSellerInformation(id);
   }
-  const handleEditClick=(id)=>{
-    console.log(id)
-    // setOpenEdit(!openEdit);
-    // setProductId(id);
+  const handleEditClick=(id,info)=>{
+    setsellerEamilName(info)
+    setSellerId(id)
+    setOpenEdit(!openEdit);
+  
   }
   const getDeletedSellerInformation= async (id)=>{
     try {
@@ -293,6 +299,17 @@ const SignUp = () => {
           getRowId={(row) => row.seller_id} 
         />
       </Box>
+      <PopUp
+        open={openEdit}
+        title={"Update Passord"}
+        handleClose={() => setOpenEdit(!openEdit)}
+      >
+        <UpdateSellerPassword
+        selleInfo={sellerEamilName}
+          id={sellerId}
+          closeEdit={()=>setOpenEdit(!openEdit)}
+        />
+      </PopUp>
       </>
   );
 };

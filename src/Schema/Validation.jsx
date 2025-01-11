@@ -1,20 +1,20 @@
 import * as Yup from "yup"
 
-export const SupplierForm=Yup.object({
-    name :Yup.string()
-                .min(4,"Supplier Name must be at least 4 charaters")
-                .max(100, "Supplier name must be at most 100 characters")
-                .required("Please Enter Your Supplier Name"),
+export const SupplierForm = Yup.object({
+  name: Yup.string()
+    .min(4, "Supplier Name must be at least 4 charaters")
+    .max(100, "Supplier name must be at most 100 characters")
+    .required("Please Enter Your Supplier Name"),
 
-    phoneNumber:Yup.string()
-                .matches(/^[0-9]+$/, "Phone number must contain only numbers")
-                .length(10, "Phone number must be exactly 10 digits")
-                .required("Please Enter Phone Number"),
+  phoneNumber: Yup.string()
+    .matches(/^[0-9]+$/, "Phone number must contain only numbers")
+    .length(10, "Phone number must be exactly 10 digits")
+    .required("Please Enter Phone Number"),
 
-    address:Yup.string()
-                .min(4)
-                .max(255)
-                .required("Please enter address")
+  address: Yup.string()
+    .min(4)
+    .max(255)
+    .required("Please enter address")
 })
 export const ProductForm = () => {
   return Yup.object({
@@ -25,7 +25,7 @@ export const ProductForm = () => {
     //     'Invalid Supplier'
     //   ),
     supplier_id: Yup.string()
-    .required('Product Name is required'),
+      .required('Product Name is required'),
     name: Yup.string()
       .required('Product Name is required'),
 
@@ -36,8 +36,11 @@ export const ProductForm = () => {
       .required('Rate is required')
       .typeError('Rate must be a number')
       .positive('Rate must be a positive number'),
-
-      image: Yup.string()
+    buyprice: Yup.number()
+      .required('Buy Price is required')
+      .typeError('Buy Price must be a number')
+      .positive('Buy Price must be a positive number'),
+    image: Yup.string()
       .required('Photo is required'), // Only checks that it's not empty
 
     description: Yup.string()
@@ -71,9 +74,18 @@ export const SignUpForm = Yup.object({
     .required('Please enter a phone number'),
 });
 
-export const OrderForm=Yup.object({
-  qyt:Yup.number()
-  .required('Rate is required')
-  .typeError('Rate must be a number')
-  .positive('Rate must be a positive number'),
+export const OrderForm = Yup.object({
+  qyt: Yup.number()
+    .required('Rate is required')
+    .typeError('Rate must be a number')
+    .positive('Rate must be a positive number'),
+    description: Yup.string()
+    .required('Description is required')
+    .min(10, 'Description must be at least 10 characters'),
 })
+
+export const UpdatePassword = Yup.object({
+  password: Yup.string()
+    .min(8, 'Password must be at least 8 characters')
+    .required('Password is required'),
+});

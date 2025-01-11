@@ -3,22 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { ProductForm } from '../../Schema/Validation';
 import supplierServise from '../../../services/supplier';
 import productsServise from '../../../services/product';
+import { useSnackbar } from 'notistack';
 
 const initialValues = {
   supplier_id: '',
   name: '',
   size: '',
   rate: '',
+  buyprice:"",
   image: '',
   description: '',
 };
 
-const EditProduct = ({ id, allInformation }) => {
+const EditProduct = ({ id, allInformation,closeEdit }) => {
   const [suppluInformation, setSuppluInformation] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [productInformation, setProductInformation] = useState(null);
-
+ const { enqueueSnackbar } = useSnackbar();
   const getSingleProductInformation = async (supplierId) => {
     try {
       const res = await productsServise.getSingleProductInformation(supplierId);
@@ -27,10 +29,14 @@ const EditProduct = ({ id, allInformation }) => {
       console.error('Failed to fetch seller information:', error);
     }
   };
-
+  
   const getUpdateProductInformation = async (productId,value) => {
+    const imageUrl = await uploadImage(imageFile);
+  console.log(imageUrl);
+  const { image, ...rest } = value;
+  const data = { ...rest, photo: imageUrl };
     try {
-      const res = await productsServise.getUpdateProductInformation(productId,value);
+      const res = await productsServise.getUpdateProductInformation(productId,data);
       console.log(res);
       if (res && res.success) {
         enqueueSnackbar("Supplier Add Successful", {
@@ -38,6 +44,7 @@ const EditProduct = ({ id, allInformation }) => {
           anchorOrigin: { horizontal: "right", vertical: "top" },
           autoHideDuration: 1000,
         });
+        closeEdit();
         allInformation()
         console.log("created Product "+productInformation)
       } else {
@@ -71,7 +78,7 @@ const EditProduct = ({ id, allInformation }) => {
         ...value,
         supplier_id: Number(value.supplier_id),
         rate: Number(value.rate),
-        size: value.size ? Number(value.size) : '', // Ensure it's only converted if needed
+        // Ensure it's only converted if needed
       };
       getUpdateProductInformation(id,updateValue);
       console.log(updateValue);
@@ -113,6 +120,7 @@ const EditProduct = ({ id, allInformation }) => {
         name: productInformation.name || '',
         size: productInformation.size || '',
         rate: productInformation.rate || '',
+        buyprice: productInformation.buyprice || '',
         image: productInformation.photo || '',
         description: productInformation.description || '',
       });
@@ -122,6 +130,24 @@ const EditProduct = ({ id, allInformation }) => {
   useEffect(() => {
     getAllTheSellerInformation();
   }, []);
+
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "upload_preset",
+      `${import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET}`
+    ); // Replace with your upload preset
+    formData.append("cloud_name", `${import.meta.env.VITE_CLOUD_NAME}`); // Replace with your Cloudinary cloud name
+
+    const response = await fetch(import.meta.env.VITE_CLOUDINARY_API_URL, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    return data.secure_url; // Cloudinary URL of the uploaded image
+  };
 
   return (
     <div>
@@ -201,6 +227,23 @@ const EditProduct = ({ id, allInformation }) => {
                 />
                 {errors.rate && touched.rate && <p className="text-left text-red-600">{errors.rate}</p>}
               </div>
+              <div className="flex flex-col mt-2 ml-2 sm:ml-2 sm:mt-0">
+                  <label htmlFor="rate" className="text-left">
+                    Buy Price
+                  </label>
+                  <input
+                    type="text"
+                    name="buyprice"
+                    placeholder="Buy Price"
+                    value={values.buyprice}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="border-2 rounded-md w-52 h-10 pl-2 text-lg"
+                  />
+                  {errors.buyprice && touched.buyprice && (
+                    <p className="text-left text-red-600">{errors.buyprice}</p>
+                  )}
+                </div>
               <div className="flex flex-col mt-2 sm:ml-2 sm:mt-0">
                 <label htmlFor="image" className="text-left">
                   Photo

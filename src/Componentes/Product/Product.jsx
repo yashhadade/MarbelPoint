@@ -16,7 +16,8 @@ const initialValues = {
   name: "",
   size: "",
   rate: "",
-  image: "",
+  buyprice:"",
+  photo: "",
   description: "",
 };
 
@@ -36,6 +37,7 @@ const Product = () => {
     { field: "name", headerName: "Product Name", width: 180 },
     { field: "size", headerName: "Size", width: 250 },
     { field: "rate", headerName: "Rate", width: 250 },
+    { field: "buyprice", headerName: "Buy Price", width: 250 },
     {
       field: "photo",
       headerName: "Photo",
@@ -74,7 +76,7 @@ const Product = () => {
               handleDownloadQrCode(
                 params.row.id,
                 params.row.name,
-                params.row.rate
+                params.row.buyprice
               )
             }
           >
@@ -213,7 +215,7 @@ const Product = () => {
     const imageUrl = await uploadImage(imageFile);
 console.log(imageUrl);
 
-    const data = { ...value, image: imageUrl };
+    const data = { ...value, photo: imageUrl };
     try {
       const res = await productsServise.getProductInformation(data);
 
@@ -250,6 +252,7 @@ console.log(imageUrl);
           supplier_id: Number(value.supplier_id),
           rate: Number(value.rate),
           size: value.size,
+          buyprice:Number(value.buyprice),
         };
 
         console.log(updateValue);
@@ -430,19 +433,36 @@ console.log(imageUrl);
                     <p className="text-left text-red-600">{errors.rate}</p>
                   )}
                 </div>
+                <div className="flex flex-col mt-2 ml-2 sm:ml-2 sm:mt-0">
+                  <label htmlFor="rate" className="text-left">
+                    Buy Price
+                  </label>
+                  <input
+                    type="text"
+                    name="buyprice"
+                    placeholder="Buy Price"
+                    value={values.buyprice}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="border-2 rounded-md w-52 h-10 pl-2 text-lg"
+                  />
+                  {errors.buyprice && touched.buyprice && (
+                    <p className="text-left text-red-600">{errors.buyprice}</p>
+                  )}
+                </div>
                 <div className="flex flex-col mt-2 sm:ml-2 sm:mt-0">
-                  <label htmlFor="image" className="text-left">
+                  <label htmlFor="photo" className="text-left">
                     Photo
                   </label>
                   <input
                     type="file"
-                    name="image"
+                    name="photo"
                     onChange={handleFileUpload}
                     onBlur={handleBlur}
                     className="border-2 rounded-md w-52 h-10 pl-2 text-lg"
                   />
-                  {errors.image && touched.image && (
-                    <p className="text-left text-red-600">{errors.image}</p>
+                  {errors.photo && touched.photo && (
+                    <p className="text-left text-red-600">{errors.photo}</p>
                   )}
                 </div>
                 <div className="flex flex-col mt-2 sm:ml-2 sm:mt-0">
@@ -493,7 +513,7 @@ console.log(imageUrl);
           }}
           rows={productInformation}
           columns={columns}
-          pageSize={5}
+          pageSize={0}
           rowsPerPageOptions={[5, 10, 20]}
           disableSelectionOnClick
           components={{ Toolbar: GridToolbar }}
@@ -508,6 +528,7 @@ console.log(imageUrl);
         <EditProduct
           id={productId}
           allInformation={getAllTheProductInformation}
+          closeEdit={()=>setOpenEdit(!openEdit)}
         />
       </PopUp>
       {/* <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} children={<div>hii</div>}/> */}

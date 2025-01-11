@@ -20,6 +20,15 @@ const getAllTheOrderInformation=()=>{
         return err.response.data;
     })
 }
+const getAllTheSellerOrderInformation=()=>{
+    return server.get("/order/bySeller")
+    .then(res=>{
+        return res.data
+    })
+    .catch(err=>{
+        return err.response.data;
+    })
+}
 
 const getSingleOrderInformation=(id)=>{
     return server.get(`/order/${id}`)
@@ -31,7 +40,7 @@ const getSingleOrderInformation=(id)=>{
     })
 }
 const getUpdateOrderInformation=(id,data)=>{
-    return server.put(`/order/update${id}`,data)
+    return server.put(`/order/update/${id}`,data)
     .then(res=>{
         return res.data
     })
@@ -54,7 +63,8 @@ const orderServise={
     getAllTheOrderInformation,
     getSingleOrderInformation,
     getUpdateOrderInformation,
-    getDeletedOrderInformation
+    getDeletedOrderInformation,
+    getAllTheSellerOrderInformation,
 }
 
 export default orderServise;

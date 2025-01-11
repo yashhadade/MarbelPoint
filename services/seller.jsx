@@ -41,7 +41,7 @@ const getUpdateSellerInformation=(id,data)=>{
     })
 }
 const getDeletedSellerInformation=(id)=>{
-    return server.delete(`/seller/delete${id}`)
+    return server.delete(`/seller/delete/${id}`)
     .then(res=>{
         return res.data
     })
@@ -59,14 +59,23 @@ const getSellerSignIn=(data)=>{
         return err.response.data;
     })
 }
-
+const getUpdatePassword =(id,data)=>{
+    return server.put(`/seller/update-password/${id}`,data)
+    .then(res=>{
+        return res.data;
+    })
+    .catch(err=>{
+        return err.response.data;
+    })
+}
 const sellerServise={
     getAllTheSellerInformation,
     getSingleSellerInformation,
     getUpdateSellerInformation,
     getDeletedSellerInformation,
     getSellerSignIn,
-    getSellerInformation
+    getSellerInformation,
+    getUpdatePassword
 }
 
 export default sellerServise;

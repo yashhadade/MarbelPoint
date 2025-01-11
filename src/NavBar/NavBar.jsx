@@ -12,6 +12,8 @@ import SignUp from '../Auth/SignUp';
 import Supplier from '../Componentes/Supplier/Supplier';
 import Logo from "../assets/MPlogo.png"
 import AllOrder from '../Componentes/Order/AllOrder';
+import { useNavigate } from 'react-router-dom';
+
 // Define theme for the demo
 const demoTheme = createTheme({
   cssVariables: {
@@ -29,26 +31,33 @@ const demoTheme = createTheme({
   },
 });
 
-
 function DemoPageContent({ pathname }) {
   let content;
+  const navigate = useNavigate();
 
-  
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("No token found, navigating to home..."); 
+      navigate("/"); 
+    }
+  }, [navigate]);
+
   switch (pathname) {
     case '/supplier':
-      content = <Supplier/>;
+      content = <Supplier />;
       break;
     case '/product':
-      content = <Product/>;
+      content = <Product />;
       break;
     case '/allorder':
-      content = <AllOrder/>;
+      content = <AllOrder />;
       break;
     case '/signUp':
-      content=<SignUp/>;
+      content = <SignUp />;
       break;
     default:
-      content = <Supplier/>;
+      content = <Supplier />;
   }
 
   return (
@@ -70,13 +79,22 @@ DemoPageContent.propTypes = {
   pathname: PropTypes.string.isRequired,
 };
 
-
 function Navbar(props) {
   const { window } = props;
-  const router = useDemoRouter('/home'); 
+  const router = useDemoRouter('/home');
+  const navigate = useNavigate();  // Use the navigate hook outside of AppProvider
 
-  
   const demoWindow = window !== undefined ? window() : undefined;
+
+  // Function to handle logout
+  const handleLogout = () => {
+    // Remove the token from localStorage
+    localStorage.removeItem('token');
+
+    // Redirect to home or login page
+    console.log("Logged out, navigating to home...");
+    navigate("/");  // Redirect to home page after logout (you can change this to '/login')
+  };
 
   return (
     <AppProvider
@@ -101,6 +119,12 @@ function Navbar(props) {
           title: 'Sign Up',
           icon: <DescriptionIcon />,
         },
+        // {
+        //   segment: "logOut",
+        //   title: "LOGOUT",
+        //   icon: <DescriptionIcon />,
+        //   onClick: handleLogout,
+        // }
       ]}
       router={router}
       theme={demoTheme}

@@ -10,6 +10,7 @@ import Logo from "../assets/MPlogo.png"
 import AllOrder from '../Componentes/Order/AllOrder';
 import PlaceOrder from '../Componentes/Order/PlaceOrder';
 import GetOrder from '../Componentes/Order/GetOrder';
+import SellerOrder from '../Componentes/Order/SellerOrder';
 // Define theme for the demo
 const demoTheme = createTheme({
     cssVariables: {
@@ -34,13 +35,13 @@ function DemoPageContent({ pathname }) {
 
     switch (pathname) {
         case '/allorder':
-            content = <AllOrder />;
+            content = <SellerOrder />;
             break;
         case '/plasedOrder':
             content = <GetOrder/>
             break;
         default:
-            content = <AllOrder />;
+            content = <SellerOrder />;
     }
 
     return (
