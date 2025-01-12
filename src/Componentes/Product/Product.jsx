@@ -522,7 +522,7 @@ console.log(imageUrl);
       </Box>
       <PopUp
         open={openEdit}
-        title={"Edit Supplier"}
+        title={"Edit Product"}
         handleClose={() => setOpenEdit(!openEdit)}
       >
         <EditProduct

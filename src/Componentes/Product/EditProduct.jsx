@@ -114,7 +114,7 @@ const EditProduct = ({ id, allInformation,closeEdit }) => {
 
   useEffect(() => {
     if (productInformation) {
-      console.log(productInformation)
+      setImagePreview(productInformation.photo)
       setValues({
         supplier_id: productInformation.supplier_id || '',
         name: productInformation.name || '',
@@ -151,7 +151,7 @@ const EditProduct = ({ id, allInformation,closeEdit }) => {
 
   return (
     <div>
-      <div className="text-3xl font-bold">PRODUCT</div>
+      {/* <div className="text-3xl font-bold">PRODUCT</div> */}
       <div className="border-2 w-auto p-5 mt-2 rounded-xl shadow-xl">
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col">
