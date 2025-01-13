@@ -30,10 +30,12 @@ const SignIn = () => {
           autoHideDuration: 1000,
         });
       } else {
-        enqueueSnackbar(res.data, {
-          variant: 'error',
-          anchorOrigin: { horizontal: 'right', vertical: 'top' },
-          autoHideDuration: 800,
+        const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
+  
+        enqueueSnackbar(errorMessage, {
+          variant: "error",
+          anchorOrigin: { horizontal: "right", vertical: "top" },
+          autoHideDuration: 5000,
         });
       }
     } catch (error) {

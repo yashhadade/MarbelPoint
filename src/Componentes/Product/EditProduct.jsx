@@ -20,6 +20,7 @@ const EditProduct = ({ id, allInformation,closeEdit }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [productInformation, setProductInformation] = useState(null);
+  const [loading, setLoading] = useState(false);
  const { enqueueSnackbar } = useSnackbar();
   const getSingleProductInformation = async (supplierId) => {
     try {
@@ -48,15 +49,17 @@ const EditProduct = ({ id, allInformation,closeEdit }) => {
         allInformation()
         console.log("created Product "+productInformation)
       } else {
-        enqueueSnackbar(res.data, {
+        const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
+  
+        enqueueSnackbar(errorMessage, {
           variant: "error",
           anchorOrigin: { horizontal: "right", vertical: "top" },
-          autoHideDuration: 800,
+          autoHideDuration: 5000,
         });
       }
     } catch (error) {
       enqueueSnackbar("Error", {
-        variant: "error",
+        variant: `error${error}`,
         anchorOrigin: { horizontal: "right", vertical: "top" },
         autoHideDuration: 800,
       });
@@ -70,17 +73,19 @@ const EditProduct = ({ id, allInformation,closeEdit }) => {
     }
   }, [id]);
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setValues } = useFormik({
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit, setValues,resetForm } = useFormik({
     initialValues,
     validationSchema: ProductForm,
     onSubmit: async (value) => {
+      setLoading(!loading);
       const updateValue = {
         ...value,
         supplier_id: Number(value.supplier_id),
         rate: Number(value.rate),
-        // Ensure it's only converted if needed
       };
-      getUpdateProductInformation(id,updateValue);
+      await getUpdateProductInformation(id,updateValue);
+      setLoading(!loading)
+      resetForm();
       console.log(updateValue);
     },
   });
@@ -278,9 +283,17 @@ const EditProduct = ({ id, allInformation,closeEdit }) => {
               </div>
             )}
 
-            <button className="border-2 mt-2 p-2 rounded-md shadow-sm hover:tracking-widest bg-sky-700 text-white" type="submit">
-              Submit
-            </button>
+<button
+        className="border-2 mt-2 p-2 rounded-md shadow-sm hover:tracking-widest bg-sky-700 text-white"
+        type="submit"
+        disabled={loading}
+      >
+        {loading ? (
+          <span>Loading...</span> 
+        ) : (
+          'Submit'
+        )}
+      </button>
           </div>
         </form>
       </div>

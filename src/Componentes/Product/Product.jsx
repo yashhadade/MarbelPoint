@@ -16,7 +16,7 @@ const initialValues = {
   name: "",
   size: "",
   rate: "",
-  buyprice:"",
+  buyprice: "",
   photo: "",
   description: "",
 };
@@ -30,6 +30,7 @@ const Product = () => {
   const [suppluInformation, setSuppluInformation] = useState([]);
   const [productInformation, setProductInformation] = useState();
   const [openEdit, setOpenEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [productId, setProductId] = useState();
   const columns = [
     { field: "id", headerName: "Product ID", width: 180 },
@@ -211,14 +212,13 @@ const Product = () => {
   };
   const getProductInformation = async (value) => {
     // Create FormData and append all key-value pairs
-
     const imageUrl = await uploadImage(imageFile);
-console.log(imageUrl);
-
+    console.log(imageUrl);
+  
     const data = { ...value, photo: imageUrl };
     try {
       const res = await productsServise.getProductInformation(data);
-
+  
       if (res && res.success) {
         enqueueSnackbar("Product Add Successful", {
           variant: "success",
@@ -227,46 +227,54 @@ console.log(imageUrl);
         });
         getAllTheProductInformation();
       } else {
-        enqueueSnackbar(res.data, {
+      
+        console.log(res);
+  
+        
+        const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
+  
+        enqueueSnackbar(errorMessage, {
           variant: "error",
           anchorOrigin: { horizontal: "right", vertical: "top" },
-          autoHideDuration: 800,
+          autoHideDuration: 5000,
         });
       }
     } catch (error) {
-      enqueueSnackbar("Error", {
+     
+      enqueueSnackbar(error.message || "Error", {
         variant: "error",
         anchorOrigin: { horizontal: "right", vertical: "top" },
         autoHideDuration: 800,
       });
     }
   };
+  
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit, resetForm } =
     useFormik({
       initialValues: initialValues,
       validationSchema: ProductForm,
       onSubmit: async (value) => {
+        setLoading(true);
         const updateValue = {
           ...value,
           supplier_id: Number(value.supplier_id),
           rate: Number(value.rate),
           size: value.size,
-          buyprice:Number(value.buyprice),
+          buyprice: Number(value.buyprice),
         };
 
         console.log(updateValue);
-        getProductInformation(updateValue);
+        await getProductInformation(updateValue);
+        setLoading(false);
+        resetForm();
+
       },
     });
   const getAllTheProductInformation = async () => {
     try {
       const res = await productsServise.getAllTheProductInformation();
-      // const formattedData = res.data.map((item) => ({
-      //   ...item,
-      //   id: item.product_id, // Use supplier_id as the id field for DataGrid
-      // }));(
-      // setProductInformation(res.data);
+
       if (res && res.success) {
         console.log(res.data);
         setProductInformation(res.data); // Set the updated data
@@ -497,8 +505,13 @@ console.log(imageUrl);
               <button
                 className="border-2 mt-2 p-2 rounded-md shadow-sm hover:tracking-widest bg-sky-700 text-white"
                 type="submit"
+                disabled={loading} // Disable the button while loading
               >
-                Submit
+                {loading ? (
+                  <span>Loading...</span> // You can replace this with a spinner or other indicator
+                ) : (
+                  'Submit'
+                )}
               </button>
             </div>
           </form>
@@ -528,7 +541,7 @@ console.log(imageUrl);
         <EditProduct
           id={productId}
           allInformation={getAllTheProductInformation}
-          closeEdit={()=>setOpenEdit(!openEdit)}
+          closeEdit={() => setOpenEdit(!openEdit)}
         />
       </PopUp>
       {/* <PopUp open={openEdit} title={"Edit Supplier"} handleClose={()=>setOpenEdit(!openEdit)} children={<div>hii</div>}/> */}

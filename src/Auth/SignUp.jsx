@@ -95,10 +95,12 @@ const SignUp = () => {
         });
         getAllTheSellerInformation();
       }else{
-        enqueueSnackbar(res.data, {
+        const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
+  
+        enqueueSnackbar(errorMessage, {
           variant: "error",
           anchorOrigin: { horizontal: "right", vertical: "top" },
-          autoHideDuration: 800,
+          autoHideDuration: 5000,
         });
       }
     } catch (error) {

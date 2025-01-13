@@ -24,15 +24,17 @@ const UpdatedOrder = ({ id, info,closeEdit ,refreshTabel}) => {
             });
             closeEdit()
             refreshTabel()
-            console.log("created Product "+productInformation)
+          
           }
-        //    else {
-        //     enqueueSnackbar(res.data, {
-        //       variant: "error",
-        //       anchorOrigin: { horizontal: "right", vertical: "top" },
-        //       autoHideDuration: 800,
-        //     });
-        //   }
+           else {
+            const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
+  
+            enqueueSnackbar(errorMessage, {
+              variant: "error",
+              anchorOrigin: { horizontal: "right", vertical: "top" },
+              autoHideDuration: 5000,
+            });
+          }
         } catch (error) {
             console.log(sgfdsdfg)
           enqueueSnackbar("Error", {

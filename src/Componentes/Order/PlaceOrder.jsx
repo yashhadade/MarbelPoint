@@ -7,42 +7,44 @@ import orderServise from '../../../services/order';
 import { useSnackbar } from 'notistack';
 
 const initialValues = {
-    qyt: '', 
+    qyt: '',
     description: '',
 };
 
 const PlaceOrder = () => {
     const [productInformation, setProductInformation] = useState(null); // Initialize state for product info
-        const { enqueueSnackbar } = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
 
-    const { id } = useParams(); 
+    const { id } = useParams();
 
     const getOrderInformation = async (value) => {
         try {
-          const res = await orderServise.getOrderInformation(value);
-          console.log(res);
-          if (res && res.success) {
-            enqueueSnackbar("Order Placed Sucessfully", {
-              variant: "success",
-              anchorOrigin: { horizontal: "right", vertical: "top" },
-              autoHideDuration: 3000,
-            });
-            console.log("created Product "+productInformation)
-          } else {
-            enqueueSnackbar(res.data, {
-              variant: "error",
-              anchorOrigin: { horizontal: "right", vertical: "top" },
-              autoHideDuration: 800,
-            });
-          }
+            const res = await orderServise.getOrderInformation(value);
+            console.log(res);
+            if (res && res.success) {
+                enqueueSnackbar("Order Placed Sucessfully", {
+                    variant: "success",
+                    anchorOrigin: { horizontal: "right", vertical: "top" },
+                    autoHideDuration: 3000,
+                });
+                console.log("created Product " + productInformation)
+            } else {
+                const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
+
+                enqueueSnackbar(errorMessage, {
+                    variant: "error",
+                    anchorOrigin: { horizontal: "right", vertical: "top" },
+                    autoHideDuration: 5000,
+                });
+            }
         } catch (error) {
-          enqueueSnackbar("Error", {
-            variant: "error",
-            anchorOrigin: { horizontal: "right", vertical: "top" },
-            autoHideDuration: 800,
-          });
+            enqueueSnackbar("Error", {
+                variant: "error",
+                anchorOrigin: { horizontal: "right", vertical: "top" },
+                autoHideDuration: 800,
+            });
         }
-      };
+    };
     const getSingleProductInformation = async (productId) => {
         try {
             const res = await productsServise.getSingleProductInformation(productId);
@@ -68,13 +70,13 @@ const PlaceOrder = () => {
         onSubmit: async (value) => {
             const updateValue = {
                 ...value,
-                product_id: productInformation.product_id, 
-                qyt: Number(value.qyt), 
+                product_id: productInformation.product_id,
+                qyt: Number(value.qyt),
             };
             console.log(updateValue);
             getOrderInformation(updateValue);
-            
-           
+
+
         },
     });
 
@@ -87,17 +89,17 @@ const PlaceOrder = () => {
                 {/* Render product information if available */}
                 {productInformation ? (
                     <div>
-                        
-                        <h2 className=' text-lg' style={{fontWeight:"500"}}>Product Code: {productInformation.id}</h2>
-                        <h2  className=' text-lg' style={{fontWeight:"500"}}>Supplier Name:{productInformation.supplier_name}</h2>
-                        <h2 className=' text-lg' style={{fontWeight:"500"}}>Product Name: {productInformation.name}</h2>
+
+                        <h2 className=' text-lg' style={{ fontWeight: "500" }}>Product Code: {productInformation.id}</h2>
+                        <h2 className=' text-lg' style={{ fontWeight: "500" }}>Supplier Name:{productInformation.supplier_name}</h2>
+                        <h2 className=' text-lg' style={{ fontWeight: "500" }}>Product Name: {productInformation.name}</h2>
                         <p>Photo:</p>
                         {/* Display product image if URL is available */}
                         {/* {productInformation.photo &&  */}
                         <img src={productInformation.photo} alt="Product Photo" className="w-32 h-32 object-cover" />
                         {/* } */}
                         <p>Description: {productInformation.description}</p>
-                        <p className=' text-lg' style={{fontWeight:"500"}}>Price: ${productInformation.rate}</p>
+                        <p className=' text-lg' style={{ fontWeight: "500" }}>Price: ${productInformation.rate}</p>
 
                         {/* Order form */}
                         <form onSubmit={handleSubmit}>
