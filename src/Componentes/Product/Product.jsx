@@ -372,7 +372,7 @@ const Product = () => {
                     className="border-2 rounded-md h-10 w-52 pl-2 text-lg"
                   >
                     <option value="">Select Supplier</option>
-                    {suppluInformation.length > 0 ? (
+                    {suppluInformation?.length > 0 ? (
                       suppluInformation.map((info, index) => (
                         <option key={index} value={info.supplier_id}>
                           {info.name}

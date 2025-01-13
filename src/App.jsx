@@ -14,6 +14,7 @@ function App() {
   return (
     <>
       <SnackbarProvider maxSnack={3}>
+        
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/Dashbord" element={<Navbar />} />

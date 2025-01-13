@@ -144,14 +144,15 @@ const SignUp = () => {
           autoHideDuration: 1000,
         });
          getAllTheSellerInformation();
-        console.log("created Product "+productInformation)
-      } else {
-        enqueueSnackbar(res.data, {
-          variant: "error",
-          anchorOrigin: { horizontal: "right", vertical: "top" },
-          autoHideDuration: 800,
-        });
-      }
+       
+      } else { const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
+  
+      enqueueSnackbar(errorMessage, {
+        variant: "error",
+        anchorOrigin: { horizontal: "right", vertical: "top" },
+        autoHideDuration: 5000,
+      });
+    }
     } catch (error) {
       enqueueSnackbar("Error", {
         variant: "error",
@@ -161,7 +162,7 @@ const SignUp = () => {
     }
   };
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit ,resetForm} = useFormik({
     initialValues: initialValues,
     validationSchema: SignUpForm,
     onSubmit: async (value) => {
@@ -172,6 +173,7 @@ const SignUp = () => {
 
       console.log(updatedValue);
       getSellerInformation(updatedValue);
+      resetForm();
     },
   });
 

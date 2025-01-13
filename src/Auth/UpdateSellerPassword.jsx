@@ -19,7 +19,6 @@ const UpdateSellerPassword = ({ id, closeEdit,selleInfo }) => {
               autoHideDuration: 1000,
             });
             closeEdit()
-            console.log("created Product "+productInformation)
           } else {
             const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
   

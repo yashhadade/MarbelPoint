@@ -25,9 +25,9 @@ const PlaceOrder = () => {
                 enqueueSnackbar("Order Placed Sucessfully", {
                     variant: "success",
                     anchorOrigin: { horizontal: "right", vertical: "top" },
-                    autoHideDuration: 3000,
+                    autoHideDuration: 5000,
                 });
-                console.log("created Product " + productInformation)
+               
             } else {
                 const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
 
@@ -99,7 +99,8 @@ const PlaceOrder = () => {
                         <img src={productInformation.photo} alt="Product Photo" className="w-32 h-32 object-cover" />
                         {/* } */}
                         <p>Description: {productInformation.description}</p>
-                        <p className=' text-lg' style={{ fontWeight: "500" }}>Price: ${productInformation.rate}</p>
+                        <p className=' text-lg' style={{ fontWeight: "500" }}>Price: ₹ {productInformation.buyprice}</p>
+                        <p className=' text-lg' style={{ fontWeight: "500" }}>Size:  {productInformation.size}</p>
 
                         {/* Order form */}
                         <form onSubmit={handleSubmit}>

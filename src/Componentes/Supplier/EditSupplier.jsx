@@ -11,16 +11,14 @@ const initialValues = {
   address: '',
 };
 
-const EditSupplier = ({ id,allSupplierInformation }) => {
+const EditSupplier = ({ id,allSupplierInformation,closeEdit }) => {
     const { enqueueSnackbar } = useSnackbar();
   const [supplierInformation, setSupplierInformation] = useState(null);
 
   const getSingleSupplierInformation = async (supplierId) => {
     try {
       const res = await supplierServise.getSingleSupplierInformation(supplierId);
-      setSupplierInformation(res.data); 
-      console.log(res);
-      console.log(res.supplier.phoneNumber, typeof res.supplier.phoneNumber);
+      setSupplierInformation(res.data);
     } catch (error) {
       console.error('Failed to fetch seller information:', error);
     }
@@ -36,6 +34,7 @@ const EditSupplier = ({ id,allSupplierInformation }) => {
           autoHideDuration: 1000,
         });
         allSupplierInformation(); // Refresh the supplier list after adding
+        closeEdit()
       } else {
         const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
   

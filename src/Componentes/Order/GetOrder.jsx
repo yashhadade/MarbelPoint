@@ -63,7 +63,7 @@ function GetOrder() {
           });
         }
       };
-    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+    const { values, errors, touched, handleBlur, handleChange, handleSubmit,resetForm } = useFormik({
         initialValues: initialValues,
         validationSchema: OrderForm,
         onSubmit: (value) => {
@@ -74,6 +74,7 @@ function GetOrder() {
             };
             getOrderInformation(updateValue);
             console.log(updateValue);  // Handle the form submission (e.g., API call to place an order)
+            resetForm();
         },
     });
 

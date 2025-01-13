@@ -87,6 +87,7 @@ const Supplier = () => {
 
   // Fetch all supplier data
   const getAllTheSupplierInformation = async () => {
+    // console.log("Delete")
     try {
       const res = await supplierServise.getAllTheSupplierInformation();
       if (res && res.success) {
@@ -108,7 +109,7 @@ const Supplier = () => {
   }, []);
 
   // Handle form submission using Formik
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit,resetForm } = useFormik({
     initialValues: initialValues,
     validationSchema: SupplierForm,
     onSubmit: async (value) => {
@@ -117,6 +118,7 @@ const Supplier = () => {
         phoneNumber: Number(value.phoneNumber), // Ensure the phone number is a number
       };
       await getSupplierInformation(updateValue);
+      resetForm()
     },
   });
 
@@ -130,12 +132,14 @@ const Supplier = () => {
           anchorOrigin: { horizontal: "right", vertical: "top" },
           autoHideDuration: 1000,
         });
-        getAllTheSupplierInformation(); // Refresh the supplier list after adding
+        await getAllTheSupplierInformation(); // Refresh the supplier list after adding
       } else {
-        enqueueSnackbar(res.data, {
+        const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
+  
+        enqueueSnackbar(errorMessage, {
           variant: "error",
           anchorOrigin: { horizontal: "right", vertical: "top" },
-          autoHideDuration: 800,
+          autoHideDuration: 5000,
         });
       }
     } catch (error) {
@@ -156,7 +160,7 @@ const Supplier = () => {
           anchorOrigin: { horizontal: "right", vertical: "top" },
           autoHideDuration: 1000,
         });
-        getAllTheSupplierInformation();
+       await getAllTheSupplierInformation();
       } else {
         const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
   
@@ -252,7 +256,7 @@ const Supplier = () => {
         />
       </Box>
       <PopUp open={openEdit} title={"Edit Supplier"} handleClose={() => setOpenEdit(!openEdit)}  >
-      <EditSupplier id={supplierId} allSupplierInformation={getAllTheSupplierInformation} />
+      <EditSupplier id={supplierId} allSupplierInformation={getAllTheSupplierInformation} closeEdit={()=>setOpenEdit(!openEdit)} />
       </PopUp>
     </SnackbarProvider>
   );
