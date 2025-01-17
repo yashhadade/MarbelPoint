@@ -7,7 +7,7 @@ import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { useSnackbar } from "notistack";
-import PopUp from "../../Model/popup";
+import PopUp from "../../Model/PopUp";
 import EditProduct from "./EditProduct";
 import QRCode from "qrcode";
 import WhiteLogo from "../../assets/WhiteBackGoundLogo.png";
