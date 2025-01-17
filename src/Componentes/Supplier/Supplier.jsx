@@ -6,7 +6,7 @@ import { useSnackbar, SnackbarProvider } from 'notistack';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Button } from '@mui/material'; // Add this import
-import PopUp from '../../Model/popup';
+import PopUp from '../../Model/PopUp';
 import { Edit } from '@mui/icons-material';
 import EditSupplier from './EditSupplier';
 

@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 import { Box } from '@mui/material';
 import { DataGrid,GridToolbar } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
-import PopUp from '../Model/popup';
+import PopUp from '../Model/PopUp';
 import UpdateSellerPassword from './UpdateSellerPassword';
 
 const initialValues = {

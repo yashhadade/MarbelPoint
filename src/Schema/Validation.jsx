@@ -6,9 +6,10 @@ export const SupplierForm = Yup.object({
     .max(100, "Supplier name must be at most 100 characters")
     .required("Please Enter Your Supplier Name"),
 
-  phoneNumber: Yup.string()
+    phoneNumber: Yup.string()
     .matches(/^[0-9]+$/, "Phone number must contain only numbers")
-    .length(10, "Phone number must be exactly 10 digits")
+    .min(8, "Phone number must be at least 8 digits")
+    .max(10, "Phone number must be at most 10 digits")
     .required("Please Enter Phone Number"),
 
   address: Yup.string()

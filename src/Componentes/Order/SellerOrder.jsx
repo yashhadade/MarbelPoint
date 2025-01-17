@@ -2,7 +2,7 @@ import { Box, Button } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react'
 import orderServise from '../../../services/order';
-import PopUp from '../../Model/popup';
+import PopUp from '../../Model/PopUp';
 import UpdatedOrder from './UpdatedOrder';
 
 const SellerOrder = () => {
