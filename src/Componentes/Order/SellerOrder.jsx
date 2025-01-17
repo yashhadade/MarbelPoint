@@ -24,7 +24,7 @@ const SellerOrder = () => {
             console.error('Failed to fetch seller information:', error);
         }
     };
-    console.log(orderInfo)
+    
     useEffect(() => {
         getAllTheOrderInformation();
 

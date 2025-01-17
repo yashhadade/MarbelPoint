@@ -48,7 +48,7 @@ const PlaceOrder = () => {
     const getSingleProductInformation = async (productId) => {
         try {
             const res = await productsServise.getSingleProductInformation(productId);
-            console.log(res);
+           
             if (res && res.data) {
                 setProductInformation(res.data);
             }
@@ -73,14 +73,14 @@ const PlaceOrder = () => {
                 product_id: productInformation.product_id,
                 qyt: Number(value.qyt),
             };
-            console.log(updateValue);
+            
             getOrderInformation(updateValue);
 
 
         },
     });
 
-    console.log(productInformation); // Logs the fetched product info
+    // console.log(productInformation); // Logs the fetched product info
 
     return (
         <div className=' flex justify-center align-middle h-[100vh] pb-4'>

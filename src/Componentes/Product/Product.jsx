@@ -11,6 +11,7 @@ import PopUp from "../../Model/popup";
 import EditProduct from "./EditProduct";
 import QRCode from "qrcode";
 import WhiteLogo from "../../assets/WhiteBackGoundLogo.png";
+import { useLocation } from "react-router-dom";
 const initialValues = {
   supplier_id: "",
   name: "",
@@ -24,7 +25,8 @@ const initialValues = {
 const Product = () => {
   const { enqueueSnackbar } = useSnackbar();
   const canvasRef = useRef(null);
-
+// const location=useLocation()
+const Url=window.location.origin
   const [imagePreview, setImagePreview] = useState("");
   const [imageFile, setImageFile] = useState();
   const [suppluInformation, setSuppluInformation] = useState([]);
@@ -134,7 +136,7 @@ const Product = () => {
   const handleDownloadQrCode = (id, name, rate) => {
     console.log("Generating QR code for ID:", id);
 
-    const fullUrl = `http://localhost:5173/oderSignIn/${id}`;
+    const fullUrl = `${Url}/oderSignIn/${id}`;
 
     QRCode.toCanvas(canvasRef.current, fullUrl, { width: 500 }, (error) => {
       if (error) {
@@ -186,7 +188,7 @@ const Product = () => {
   const getDeletedProductInformation = async (id) => {
     try {
       const res = await productsServise.getDeletedProductInformation(id);
-      console.log(res);
+     
 
       if (res) {
         enqueueSnackbar("Product Deleted Successful", {
@@ -228,7 +230,7 @@ const Product = () => {
         getAllTheProductInformation();
       } else {
       
-        console.log(res);
+       
   
         
         const errorMessage = res.message || res.data || "An unknown error occurred"; // Fallback message
@@ -264,7 +266,7 @@ const Product = () => {
           buyprice: Number(value.buyprice),
         };
 
-        console.log(updateValue);
+       
         await getProductInformation(updateValue);
         setLoading(false);
         resetForm();
@@ -276,7 +278,7 @@ const Product = () => {
       const res = await productsServise.getAllTheProductInformation();
 
       if (res && res.success) {
-        console.log(res.data);
+       
         setProductInformation(res.data); // Set the updated data
       } else {
         console.error(

@@ -117,6 +117,7 @@ const Supplier = () => {
         ...value,
         phoneNumber: Number(value.phoneNumber), // Ensure the phone number is a number
       };
+      console.log(updateValue)
       await getSupplierInformation(updateValue);
       resetForm()
     },
@@ -126,6 +127,7 @@ const Supplier = () => {
   const getSupplierInformation = async (value) => {
     try {
       const res = await supplierServise.getSupplierInformation(value);
+      console.log(res)
       if (res && res.success) {
         enqueueSnackbar("Supplier Add Successful", {
           variant: "success",
@@ -143,7 +145,9 @@ const Supplier = () => {
         });
       }
     } catch (error) {
+      console.log(error)
       enqueueSnackbar("Error", {
+        
         variant: "error",
         anchorOrigin: { horizontal: "right", vertical: "top" },
         autoHideDuration: 800,
