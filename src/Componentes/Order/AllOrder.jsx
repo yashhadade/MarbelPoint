@@ -1,13 +1,21 @@
 import { Box, Button } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar,GridToolbarExport,GridToolbarContainer} from "@mui/x-data-grid";
 import React, { useState, useEffect } from "react";
 import orderServise from "../../../services/order";
 import { useSnackbar } from "notistack";
+
 
 const AllOrder = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [orderInfo, setOrderInfo] = useState();
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarExport />
+      </GridToolbarContainer>
+    );
+  }
   const getAllTheOrderInformation = async () => {
     try {
       const res = await orderServise.getAllTheOrderInformation();
@@ -39,7 +47,13 @@ const AllOrder = () => {
       field: "photo",
       headerName: "Photo",
       width: 250,
-      hight: 500,
+      valueFormatter: (params) => {
+        // For CSV export, just return the URL or any text you want to show.
+        if (params) {
+          return params; // Return the URL as is
+        }
+        return 'No image available'; 
+      },
       renderCell: (params) => (
         <img
           src={params.value} // Assuming `params.value` contains the image URL
@@ -123,6 +137,9 @@ const AllOrder = () => {
           pageSize={5}
           rowsPerPageOptions={[5, 10, 20]}
           disableSelectionOnClick
+          slots={{
+            toolbar: CustomToolbar,
+          }}
           components={{ Toolbar: GridToolbar }}
           getRowId={(row) => row.order_id}
         />

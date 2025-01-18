@@ -12,6 +12,37 @@ import PlaceOrder from '../Componentes/Order/PlaceOrder';
 import GetOrder from '../Componentes/Order/GetOrder';
 import SellerOrder from '../Componentes/Order/SellerOrder';
 // Define theme for the demo
+function LogoutAction() {
+    console.log("logout rendered");
+    const navigate = useNavigate();
+    const handleLogout = () => {
+      // Remove the token from localStorage
+      localStorage.removeItem("token");
+  
+      // Redirect to home or login page
+      console.log("Logged out, navigating to home...");
+      navigate("/"); // Redirect to home page after logout (you can change this to '/login')
+    };
+    return (
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        width="100%"
+        >
+        <Button
+          variant="contained"
+        
+          color="primary"
+          sx={{ marginLeft: "20px" ,marginRight:"20px"}}
+          onClick={handleLogout}
+        >
+          Log Out
+        </Button>
+        <ThemeSwitcher />
+      </Box>
+    );
+  }
 const demoTheme = createTheme({
     cssVariables: {
         colorSchemeSelector: 'data-toolpad-color-scheme',
@@ -31,7 +62,15 @@ const demoTheme = createTheme({
 
 function DemoPageContent({ pathname }) {
     let content;
+const navigate = useNavigate();
 
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("No token found, navigating to home...");
+      navigate("/");
+    }
+  }, [navigate])
 
     switch (pathname) {
         case '/allorder':
@@ -95,7 +134,11 @@ function SellerNavbar(props) {
                 homeUrl: '/toolpad/core/introduction',
             }}
         >
-            <DashboardLayout>
+            <DashboardLayout
+        slots={{
+          toolbarActions: LogoutAction,
+        }}
+      >
                 <DemoPageContent pathname={router.pathname} />
             </DashboardLayout>
         </AppProvider>

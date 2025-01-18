@@ -1,23 +1,55 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { createTheme } from '@mui/material/styles';
-import DescriptionIcon from '@mui/icons-material/Description';
-import { AppProvider } from '@toolpad/core/AppProvider';
-import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import { useDemoRouter } from '@toolpad/core/internal';
-import Product from '../Componentes/Product/Product';
-import SignUp from '../Auth/SignUp';
-import Supplier from '../Componentes/Supplier/Supplier';
-import Logo from "../assets/MPlogo.png"
-import AllOrder from '../Componentes/Order/AllOrder';
-import { useNavigate } from 'react-router-dom';
+import * as React from "react";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import { createTheme } from "@mui/material/styles";
+import DescriptionIcon from "@mui/icons-material/Description";
+import { AppProvider } from "@toolpad/core/AppProvider";
+import { DashboardLayout, ThemeSwitcher } from "@toolpad/core/DashboardLayout";
+import { useDemoRouter } from "@toolpad/core/internal";
+import Product from "../Componentes/Product/Product";
+import SignUp from "../Auth/SignUp";
+import Supplier from "../Componentes/Supplier/Supplier";
+import Logo from "../assets/MPlogo.png";
+import AllOrder from "../Componentes/Order/AllOrder";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
+
+function LogoutAction() {
+  console.log("logout rendered");
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // Remove the token from localStorage
+    localStorage.removeItem("token");
+
+    // Redirect to home or login page
+    console.log("Logged out, navigating to home...");
+    navigate("/"); // Redirect to home page after logout (you can change this to '/login')
+  };
+  return (
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="flex-end"
+      width="100%"
+      >
+      <Button
+        variant="contained"
+      
+        color="primary"
+        sx={{ marginLeft: "20px" ,marginRight:"20px"}}
+        onClick={handleLogout}
+      >
+        Log Out
+      </Button>
+      <ThemeSwitcher />
+    </Box>
+  );
+}
 // Define theme for the demo
 const demoTheme = createTheme({
   cssVariables: {
-    colorSchemeSelector: 'data-toolpad-color-scheme',
+    colorSchemeSelector: "data-toolpad-color-scheme",
   },
   colorSchemes: { light: true, dark: true },
   breakpoints: {
@@ -38,22 +70,22 @@ function DemoPageContent({ pathname }) {
   React.useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      console.log("No token found, navigating to home..."); 
-      navigate("/"); 
+      console.log("No token found, navigating to home...");
+      navigate("/");
     }
   }, [navigate]);
 
   switch (pathname) {
-    case '/supplier':
+    case "/supplier":
       content = <Supplier />;
       break;
-    case '/product':
+    case "/product":
       content = <Product />;
       break;
-    case '/allorder':
+    case "/allorder":
       content = <AllOrder />;
       break;
-    case '/signUp':
+    case "/signUp":
       content = <SignUp />;
       break;
     default:
@@ -64,10 +96,10 @@ function DemoPageContent({ pathname }) {
     <Box
       sx={{
         py: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
       }}
     >
       {content}
@@ -81,61 +113,50 @@ DemoPageContent.propTypes = {
 
 function Navbar(props) {
   const { window } = props;
-  const router = useDemoRouter('/home');
-  const navigate = useNavigate();  // Use the navigate hook outside of AppProvider
+  const router = useDemoRouter("/home");
 
   const demoWindow = window !== undefined ? window() : undefined;
 
   // Function to handle logout
-  const handleLogout = () => {
-    // Remove the token from localStorage
-    localStorage.removeItem('token');
-
-    // Redirect to home or login page
-    console.log("Logged out, navigating to home...");
-    navigate("/");  // Redirect to home page after logout (you can change this to '/login')
-  };
 
   return (
     <AppProvider
       navigation={[
         {
-          segment: 'supplier',
-          title: 'Supplier',
+          segment: "supplier",
+          title: "Supplier",
           icon: <DescriptionIcon />,
         },
         {
-          segment: 'product',
-          title: 'Product',
+          segment: "product",
+          title: "Product",
           icon: <DescriptionIcon />,
         },
         {
-          segment: 'allorder',
-          title: 'All order',
+          segment: "allorder",
+          title: "All order",
           icon: <DescriptionIcon />,
         },
         {
-          segment: 'signUp',
-          title: 'Sign Up',
+          segment: "signUp",
+          title: "Sign Up",
           icon: <DescriptionIcon />,
         },
-        // {
-        //   segment: "logOut",
-        //   title: "LOGOUT",
-        //   icon: <DescriptionIcon />,
-        //   onClick: handleLogout,
-        // }
       ]}
       router={router}
       theme={demoTheme}
       window={demoWindow}
       branding={{
         logo: <img src={Logo} alt="Marbel Point Logo" style={{ width: '40px', height: 'auto' }} />,
-        title: 'Marbel point',
+        title: 'Marble point',
         homeUrl: '/toolpad/core/introduction',
       }}
     >
-      <DashboardLayout>
+      <DashboardLayout
+        slots={{
+          toolbarActions: LogoutAction,
+        }}
+      >
         <DemoPageContent pathname={router.pathname} />
       </DashboardLayout>
     </AppProvider>
